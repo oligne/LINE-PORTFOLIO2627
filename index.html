@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loader"><span id="loader-text">Loading — 0%</span></div>
+
+  <header id="site-header">
+    <nav class="nav-left">
+      <a href="#">Work</a>
+      <a href="#">Archives</a>
+    </nav>
+    <div class="logo">
+      <img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img">
+    </div>
+    <nav class="nav-right">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <div id="scroll-wrapper">
+    <div id="canvas-sticky">
+      <canvas id="anim-canvas"></canvas>
+    </div>
+  </div>
+
+  <section id="content-section">
+    <div class="content-inner">
+      <div class="text-columns">
+        <div class="column">
+          <p>Formée au design d'espace à l'École Boulle, j'ai développé une approche sensible et technique de la conception, allant du design d'objet à la création d'installations immersives et de dispositifs spatiaux, où l'espace est structuré au service des usages et d'une intention. Au fil du temps, ma pratique du design d'espace se complète et se nourrit des arts numériques. Mon mémoire de Master 2 à l'Ensaama Olivier de Serre fais office de manifeste quant à la manière de repenser les espaces numériques comme de véritables lieux à habiter, à s'approprier et à investir sensible­ment. Finalement, les espaces physiques et numériques s'hybrident et se prolongent pour ne former qu'un milieu immersif avec lequel on interagit.</p>
+        </div>
+        <div class="column">
+          <p>Ces recherches s'appuient sur une maîtrise d'outils numériques tels que la 3D, la CGI, le design génératif en temps réel et les dispositifs d'interaction homme-machine, mobilisés comme un médium à part entière pour penser des formes, des usages et des spatialités hybrides. Mon travail explore la rencontre entre espaces physiques et numériques, non comme des entités opposées mais comme des environnements complémentaires, afin de concevoir des expériences sensibles, incarnées et accessibles, interrogeant nos manières d'habiter, de percevoir et de nous approprier les espaces contemporains.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="config.js"></script>
+  <script src="loader.js"></script>
+  <script src="canvas.js"></script>
+  <script src="scroll.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

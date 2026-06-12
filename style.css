@@ -1,0 +1,98 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  background: #fff;
+  overflow-x: hidden;
+}
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#loader-text { font-size: 12px; letter-spacing: 0.1em; color: #aaa; text-transform: uppercase; }
+#loader.hidden { display: none; }
+
+#site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  z-index: 100;
+  background: transparent;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.nav-left, .nav-right { display: flex; gap: 2rem; }
+.nav-left a, .nav-right a {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  text-decoration: none;
+}
+.nav-left a:hover, .nav-right a:hover { color: #1a1a1a; }
+
+.logo {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  height: 52px;
+}
+#logo-img { height: 45px; width: auto; display: block; }
+
+#scroll-wrapper {
+  height: 600vh;
+  position: relative;
+  margin-top: 0;
+  padding-top: 0;
+}
+#canvas-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+#anim-canvas { width: 100%; height: 100%; display: block; }
+
+#content-section {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  padding: 4rem 2rem;
+}
+
+.content-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.text-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.column {
+  line-height: 1.8;
+  color: #333;
+}
+
+.column p {
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
