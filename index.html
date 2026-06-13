@@ -29,6 +29,18 @@
   <div id="scroll-wrapper">
     <div id="canvas-sticky">
       <canvas id="anim-canvas"></canvas>
+      <!-- Overlay de texte pour les changements d'état -->
+      <div id="video-text-overlay">
+        <div id="video-text-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div id="video-text-content" class="show">
+          <h3 id="video-text-title">I see digital tools as</h3>
+          <p id="video-text-description">a way to reshape our sensibility</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -42,12 +54,16 @@
           <p>Ces recherches s'appuient sur une maîtrise d'outils numériques tels que la 3D, la CGI, le design génératif en temps réel et les dispositifs d'interaction homme-machine, mobilisés comme un médium à part entière pour penser des formes, des usages et des spatialités hybrides. Mon travail explore la rencontre entre espaces physiques et numériques, non comme des entités opposées mais comme des environnements complémentaires, afin de concevoir des expériences sensibles, incarnées et accessibles, interrogeant nos manières d'habiter, de percevoir et de nous approprier les espaces contemporains.</p>
         </div>
       </div>
+      <div class="full-width-image">
+        <img src="./docs/scancarnetHP.png" alt="Carnet de croquis">
+      </div>
     </div>
   </section>
 
   <script src="config.js"></script>
   <script src="loader.js"></script>
   <script src="canvas.js"></script>
+  <script src="video-screen.js"></script>
   <script src="scroll.js"></script>
   <script src="main.js"></script>
 </body>

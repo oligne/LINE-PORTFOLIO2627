@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Afronut';
+  src: url('./docs/afronaut-test/AfronautTest-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -66,7 +73,93 @@ body {
   width: 100%;
   overflow: hidden;
 }
-#anim-canvas { width: 100%; height: 100%; display: block; }
+#anim-canvas { 
+  width: 100%; 
+  height: 100%; 
+  display: block;
+}
+
+/* Overlay de texte pour les changements d'état vidéo */
+#video-text-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  max-width: 25%;
+  display: flex;
+  flex-direction: column;
+}
+
+#video-text-content {
+  opacity: calc(var(--scroll-opacity, 0) * var(--state-opacity, 0));
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --scroll-opacity: 0;
+  --state-opacity: 0;
+}
+
+#video-text-content.show {
+  --state-opacity: 1;
+}
+
+#video-text-title {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: #999;
+  margin: 0 0 0.2rem 0;
+  line-height: 1.3;
+}
+
+#video-text-description {
+  font-family: 'Afronut', serif;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: #333;
+  margin: 0 0 1.2rem 0;
+  line-height: 1.5;
+}
+
+#video-text-dots {
+  display: flex;
+  gap: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  pointer-events: auto;
+  order: -1;
+  margin-bottom: 1rem;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid #aaa;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.dot:hover {
+  border-color: #555;
+}
+
+.dot.active {
+  background: #333;
+  border-color: #333;
+}
+
+#video-text-title.show {
+  opacity: 1;
+}
+
+#video-text-description.show {
+  opacity: 1;
+}
+
+#video-text-content.show {
+  opacity: 1;
+}
 
 #content-section {
   width: 100%;
@@ -95,4 +188,17 @@ body {
   font-size: 16px;
   letter-spacing: 0.02em;
   margin: 0;
+}
+
+.full-width-image {
+  width: 100%;
+  margin-top: 4rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.full-width-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
