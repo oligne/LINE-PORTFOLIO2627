@@ -1,0 +1,6 @@
+# Ignore video files
+*.mov
+docs/*.mov
+
+# Ignore OS files
+.DS_Store
