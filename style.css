@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Afronut';
-  src: url('./docs/afronaut-test/AfronautTest-Regular.otf') format('opentype');
+  src: url('./docs/AfronautTest-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
@@ -201,4 +201,367 @@ body {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* Portfolio Carousel Sections */
+#carousel-section,
+#windows-carousel-section {
+  position: relative;
+  background: transparent;
+  width: 100%;
+  z-index: 5;
+  min-height: 250vh;
+  margin-top: 62vh;
+}
+
+#windows-carousel-section {
+  margin-top: 28vh;
+}
+
+.horizontal-scroll {
+  position: sticky;
+  top: 25vh;
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  contain: paint;
+  --carousel-text-opacity: 0;
+  --carousel-text-left: 42vw;
+  --carousel-text-y: 18px;
+}
+
+.scroll-content {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+  transform: translate3d(20px, 0, 0);
+}
+
+.carousel-image {
+  flex-shrink: 0;
+  margin: 5px;
+  height: 100%;
+  width: auto;
+  aspect-ratio: var(--image-ratio);
+  object-fit: cover;
+}
+
+.carousel-text {
+  position: absolute;
+  left: var(--carousel-text-left);
+  top: 50%;
+  z-index: 2;
+  width: min(34vw, 430px);
+  transform: translateY(calc(-50% + var(--carousel-text-y)));
+  opacity: var(--carousel-text-opacity);
+  pointer-events: none;
+}
+
+.carousel-text h3 {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: #999;
+  margin: 0 0 0.2rem 0;
+  line-height: 1.3;
+}
+
+.carousel-text p {
+  font-family: 'Afronut', serif;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: #333;
+  margin: 0 0 1.2rem 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  #carousel-section,
+  #windows-carousel-section {
+    margin-top: 42vh;
+  }
+
+  #windows-carousel-section {
+    margin-top: 24vh;
+  }
+
+  .carousel-text {
+    width: 38vw;
+  }
+
+  .carousel-text h3 {
+    font-size: 14px;
+  }
+
+  .carousel-text p {
+    font-size: 20px;
+  }
+}
+
+#after-carousel-section {
+  min-height: 160vh;
+  background: #fff;
+}
+
+/* About page */
+.about-document {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+.about-page {
+  min-height: 100vh;
+  color: #333;
+  background: #fff;
+}
+
+.about-layout {
+  width: min(1240px, calc(100vw - 64px));
+  margin: 0 auto;
+  padding: 0 0 18vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(88px, 14vw, 220px);
+  align-items: start;
+}
+
+.about-profile {
+  position: fixed;
+  top: 0;
+  left: max(32px, calc((100vw - 1240px) / 2));
+  min-height: 100vh;
+  width: min(420px, calc((100vw - 64px - clamp(88px, 14vw, 220px)) / 2));
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  align-items: end;
+  text-align: left;
+  padding: 22vh 0 18vh;
+}
+
+.about-photo {
+  width: clamp(180px, 16vw, 240px);
+  aspect-ratio: 0.82;
+  justify-self: center;
+  align-self: center;
+  margin: 0 0 1.6rem;
+  border-radius: 12px;
+  background: #f0ebe4;
+  overflow: hidden;
+}
+
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.about-identity {
+  width: clamp(180px, 16vw, 240px);
+}
+
+.about-identity h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.8rem;
+}
+
+.about-identity p {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.65;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.about-identity p:first-of-type {
+  font-family: 'Afronut', serif;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+.about-identity .about-muted {
+  color: #aaa;
+  margin-top: 0.8rem;
+}
+
+.about-socials {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 1.4rem;
+}
+
+.about-socials a {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  text-decoration: none;
+}
+
+.about-socials a:hover {
+  color: #1a1a1a;
+}
+
+.about-timeline {
+  grid-column: 2;
+  justify-self: start;
+  width: min(100%, 680px);
+  min-height: 360vh;
+  display: grid;
+  gap: 0;
+  padding: 0 0 14vh;
+}
+
+.timeline-block {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  align-content: start;
+  gap: clamp(2.2rem, 5vh, 4rem);
+  padding-top: 22vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.timeline-block-spaced {
+  margin-top: 48vh;
+}
+
+.timeline-section-title {
+  position: absolute;
+  top: calc(22vh - 2.2rem);
+  left: 0;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin: 0;
+}
+
+.timeline-entry {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 4.5rem;
+  align-items: start;
+  transform: none;
+}
+
+.timeline-entry h2 {
+  transform: translateX(-30px);
+}
+
+.timeline-entry h2 {
+  font-family: 'Afronut', serif;
+  font-size: clamp(22px, 3vw, 40px);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.timeline-entry p {
+  font-size: 14px;
+  line-height: 1.38;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.timeline-school {
+  color: #777;
+  font-weight: 300;
+}
+
+.timeline-title {
+  font-family: 'Afronut', serif;
+  font-size: 17px;
+  color: #333;
+  font-weight: 300;
+  line-height: 1.16;
+  margin-top: 0.3rem;
+}
+
+.timeline-note {
+  color: #999;
+  font-weight: 300;
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 1050px) {
+  .about-document {
+    scroll-snap-type: none;
+  }
+
+  .about-layout {
+    width: min(760px, calc(100vw - 40px));
+    padding-top: 14vh;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .about-profile {
+    position: static;
+    min-height: auto;
+    width: min(100%, 560px);
+    padding: 0;
+  }
+
+  .about-timeline {
+    grid-column: auto;
+    min-height: auto;
+    padding: 0 0 8vh;
+  }
+
+  .timeline-block,
+  .timeline-block-spaced {
+    min-height: auto;
+    margin-top: 0;
+  }
+
+  .timeline-entry {
+    grid-template-columns: 98px 1fr;
+    gap: 1.5rem;
+    transform: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .about-layout {
+    width: calc(100vw - 32px);
+    padding-top: 110px;
+    gap: 3rem;
+  }
+
+  .about-photo {
+    width: min(240px, 70vw);
+    margin-bottom: 2rem;
+  }
+
+  .timeline-entry {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .timeline-entry h2 {
+    font-size: 32px;
+  }
+
+  .timeline-entry p {
+    font-size: 14px;
+  }
+
+  .timeline-title {
+    font-size: 18px;
+  }
 }

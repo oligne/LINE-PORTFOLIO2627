@@ -6,6 +6,15 @@
   <title>Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="./docs/proj_diplome/JOUSSETColine_photo_03.png">
+  <link rel="preload" as="image" href="./docs/proj_diplome/JOUSSETColine_photo_04.png">
+  <link rel="preload" as="image" href="./docs/proj_diplome/JOUSSETColine_photo_06.png">
+  <link rel="preload" as="image" href="./docs/proj_diplome/JOUSSETColine_photo_07.png">
+  <link rel="preload" as="image" href="./docs/windows/JOUSSETColine_rendu3D_01.png">
+  <link rel="preload" as="image" href="./docs/windows/JOUSSETColine_rendu3D_02.png">
+  <link rel="preload" as="image" href="./docs/windows/JOUSSETColine_rendu3D_03.png">
+  <link rel="preload" as="image" href="./docs/windows/JOUSSETColine_rendu3D_04.png">
+  <link rel="preload" as="image" href="./docs/windows/JOUSSETColine_rendu3D_05.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,14 +23,14 @@
 
   <header id="site-header">
     <nav class="nav-left">
-      <a href="#">Work</a>
+      <a href="index.html">Work</a>
       <a href="#">Archives</a>
     </nav>
     <div class="logo">
       <img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img">
     </div>
     <nav class="nav-right">
-      <a href="#">About</a>
+      <a href="about.html">About</a>
       <a href="#">Contact</a>
     </nav>
   </header>
@@ -60,10 +69,33 @@
     </div>
   </section>
 
+  <section id="carousel-section">
+    <div class="horizontal-scroll">
+      <div class="scroll-content"></div>
+      <div class="carousel-text">
+        <h3>Projet diplôme</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="windows-carousel-section">
+    <div class="horizontal-scroll">
+      <div class="scroll-content"></div>
+      <div class="carousel-text">
+        <h3>Windows</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam nonummy nibh euismod tincidunt.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="after-carousel-section"></section>
+
   <script src="config.js"></script>
   <script src="loader.js"></script>
   <script src="canvas.js"></script>
   <script src="video-screen.js"></script>
+  <script src="carousel-diplome.js"></script>
   <script src="scroll.js"></script>
   <script src="main.js"></script>
 </body>

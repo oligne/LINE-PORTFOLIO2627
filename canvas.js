@@ -2,6 +2,7 @@ const Canvas = (() => {
   const canvas = document.getElementById('anim-canvas');
   const ctx = canvas.getContext('2d');
   let lastFrame = 0;
+  let lastScrollProgress = 0;
   let craftingImg = null;
   let digitalImg = null;
 
@@ -53,11 +54,11 @@ const Canvas = (() => {
 
   function draw(index, scrollProgress = 0) {
     lastFrame = index;
+    lastScrollProgress = scrollProgress;
     const img = Loader.get(index);
     if (!img || !img.complete || !img.naturalWidth) return;
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    resizeCanvasIfNeeded();
 
     const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
     const x = (canvas.width - img.naturalWidth * scale) / 2;
@@ -70,7 +71,17 @@ const Canvas = (() => {
     drawBlurGradient(scrollProgress);
   }
 
-  window.addEventListener('resize', () => draw(lastFrame));
+  function resizeCanvasIfNeeded() {
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+  }
+
+  window.addEventListener('resize', () => draw(lastFrame, lastScrollProgress));
   
   preloadImages();
 

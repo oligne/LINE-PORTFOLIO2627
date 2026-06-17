@@ -1,7 +1,8 @@
 const Scroll = (() => {
   const wrapper = document.getElementById('scroll-wrapper');
+  let ticking = false;
 
-  function getFrame() {
+  function getScrollState() {
     const rect = wrapper.getBoundingClientRect();
     const scrollable = wrapper.offsetHeight - (window.innerHeight - 52);
     const scrolled = Math.max(0, -rect.top);
@@ -16,20 +17,25 @@ const Scroll = (() => {
       frame = Math.min(400 + scrolledAfter400, 500);
     }
     
-    return Math.round(frame);
+    return {
+      frame: Math.round(frame),
+      progress
+    };
   }
 
-  function getScrollProgress() {
-    const rect = wrapper.getBoundingClientRect();
-    const scrollable = wrapper.offsetHeight - (window.innerHeight - 52);
-    const scrolled = Math.max(0, -rect.top);
-    return Math.min(scrolled / scrollable, 1);
+  function requestDraw() {
+    if (ticking) return;
+
+    ticking = true;
+    requestAnimationFrame(() => {
+      const { frame, progress } = getScrollState();
+      Canvas.draw(frame, progress);
+      ticking = false;
+    });
   }
 
   function init() {
-    window.addEventListener('scroll', () => {
-      Canvas.draw(getFrame(), getScrollProgress());
-    }, { passive: true });
+    window.addEventListener('scroll', requestDraw, { passive: true });
   }
 
   return { init };

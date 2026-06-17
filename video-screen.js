@@ -8,6 +8,17 @@ const VideoScreen = (() => {
   let autoSwitchInterval = null;
   let currentStateIndex = 0;
   let videoFadeAlpha = 1; // Pour le fade de la vidéo
+  let videoLoopRunning = false;
+  let mainCanvas = null;
+  let mainCtx = null;
+  let contentElement = null;
+  let titleElement = null;
+  let descElement = null;
+  let dotsElement = null;
+  let overlayElement = null;
+  let dots = [];
+  let lastOverlayLeft = '';
+  let lastOverlayTop = '';
 
   // Définition des 3 états avec leurs ressources
   const states = [
@@ -36,9 +47,8 @@ const VideoScreen = (() => {
     try {
       const response = await fetch('./screentrackingdata.json');
       trackingData = await response.json();
-      console.log('✅ Tracking data chargée:', Object.keys(trackingData.frames).length, 'frames');
     } catch (error) {
-      console.error('❌ Erreur chargement tracking:', error);
+      // Erreur silencieuse
     }
   }
 
@@ -52,28 +62,25 @@ const VideoScreen = (() => {
     videoElement.style.display = 'none';
     document.body.appendChild(videoElement);
     
+    
     videoElement.addEventListener('loadedmetadata', () => {
-      console.log('✅ Vidéo chargée - durée:', videoElement.duration, 's');
-      console.log('📹 Dimensions vidéo:', videoElement.videoWidth, 'x', videoElement.videoHeight);
       isReady = true;
     });
 
     videoElement.addEventListener('error', (e) => {
-      console.error('❌ Erreur vidéo:', e);
+      // Erreur vidéo silencieuse
     });
 
     videoElement.addEventListener('play', () => {
-      console.log('▶️ Vidéo playing - currentTime:', videoElement.currentTime);
+      // Vidéo playing
     });
 
     videoElement.addEventListener('pause', () => {
-      console.log('⏸️ Vidéo paused - currentTime:', videoElement.currentTime);
+      // Vidéo paused
     });
 
     videoElement.addEventListener('timeupdate', () => {
-      if (Math.floor(videoElement.currentTime) % 10 === 0) {
-        console.log('⏱️ Vidéo time:', videoElement.currentTime, '/', videoElement.duration);
-      }
+      // Time update
     });
   }
 
@@ -83,8 +90,6 @@ const VideoScreen = (() => {
     
     currentStateIndex = newStateIndex;
     const state = states[currentStateIndex];
-    
-    console.log('🔄 Changement d\'état vers:', state.name);
     
     // Animer le texte
     updateTextOverlay(state.title, state.description);
@@ -113,7 +118,7 @@ const VideoScreen = (() => {
           videoElement.currentTime = 0;
           videoElement.src = state.videoSrc;
           videoElement.load();
-          videoElement.play().catch(e => console.log('Auto-play bloqué:', e));
+          videoElement.play().catch(e => {});
         }
         
         // Fade-in de la nouvelle vidéo (100ms)
@@ -135,7 +140,6 @@ const VideoScreen = (() => {
 
   // Mettre à jour les indicateurs de points
   function updateDots() {
-    const dots = document.querySelectorAll('.dot');
     dots.forEach((dot, index) => {
       if (index === currentStateIndex) {
         dot.classList.add('active');
@@ -147,9 +151,6 @@ const VideoScreen = (() => {
 
   // Mettre à jour l'overlay de texte avec animation de fondu fluide
   function updateTextOverlay(title, description) {
-    const contentElement = document.getElementById('video-text-content');
-    const titleElement = document.getElementById('video-text-title');
-    const descElement = document.getElementById('video-text-description');
     if (!contentElement || !titleElement || !descElement) return;
     
     // Fade out progressif
@@ -166,7 +167,6 @@ const VideoScreen = (() => {
 
   // Masquer l'overlay de texte
   function hideTextOverlay() {
-    const contentElement = document.getElementById('video-text-content');
     if (contentElement) contentElement.classList.remove('show');
   }
 
@@ -184,8 +184,6 @@ const VideoScreen = (() => {
     const points = getPointsForFrame(frameNum);
     if (!points) return;
 
-    const mainCanvas = document.getElementById('anim-canvas');
-    
     // Récupérer la première frame pour connaître les dimensions de référence
     const referenceImg = Loader.get(frameNum);
     if (!referenceImg || !referenceImg.naturalWidth) return;
@@ -261,6 +259,29 @@ const VideoScreen = (() => {
     ctx.restore();
   }
 
+  function positionTextOverlay(frameNum) {
+    const points = getPointsForFrame(frameNum);
+    if (!points) return;
+
+    const referenceImg = Loader.get(frameNum);
+    if (!referenceImg || !referenceImg.naturalWidth) return;
+
+    const scaleX = mainCanvas.width / referenceImg.naturalWidth;
+    const scaleY = mainCanvas.height / referenceImg.naturalHeight;
+    const left = `${points.br.x * scaleX + 60}px`;
+    const top = `${points.tr.y * scaleY + 20}px`;
+
+    if (left !== lastOverlayLeft) {
+      overlayElement.style.left = left;
+      lastOverlayLeft = left;
+    }
+
+    if (top !== lastOverlayTop) {
+      overlayElement.style.top = top;
+      lastOverlayTop = top;
+    }
+  }
+
   // Démarrer le basculement automatique toutes les 8s
   function startAutoSwitch() {
     autoSwitchInterval = setInterval(() => {
@@ -279,8 +300,6 @@ const VideoScreen = (() => {
 
   // Ajouter des points cliquables sur le canvas
   function setupClickListeners() {
-    const mainCanvas = document.getElementById('anim-canvas');
-    
     // Click sur les coins de l'écran
     mainCanvas.addEventListener('click', (e) => {
       if (currentFrame < 469 || currentFrame > 500) return;
@@ -317,7 +336,6 @@ const VideoScreen = (() => {
     });
     
     // Click sur les points indicateurs
-    const dots = document.querySelectorAll('.dot');
     dots.forEach((dot, index) => {
       dot.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -330,11 +348,18 @@ const VideoScreen = (() => {
 
   // Hook dans le système Canvas existant
   function init() {
+    mainCanvas = document.getElementById('anim-canvas');
+    mainCtx = mainCanvas.getContext('2d');
+    contentElement = document.getElementById('video-text-content');
+    titleElement = document.getElementById('video-text-title');
+    descElement = document.getElementById('video-text-description');
+    dotsElement = document.getElementById('video-text-dots');
+    overlayElement = document.getElementById('video-text-overlay');
+    dots = document.querySelectorAll('.dot');
+
     initVideo();
     loadTrackingData();
     setupClickListeners();
-
-    console.log('🔧 Avant de hooker Canvas.draw - Canvas:', typeof Canvas, 'Canvas.draw:', typeof Canvas.draw);
 
     const originalDraw = Canvas.draw;
     Canvas.draw = function(index, scrollProgress = 0) {
@@ -346,7 +371,6 @@ const VideoScreen = (() => {
       if (index >= videoStartFrame && !videoStarted && isReady) {
         videoStarted = true;
         videoElement.play().catch(e => console.log('Auto-play bloqué:', e));
-        console.log('🎬 Vidéo autoplay démarrée à frame', index);
         
         // Démarrer le basculement automatique
         startAutoSwitch();
@@ -363,14 +387,10 @@ const VideoScreen = (() => {
         videoElement.currentTime = 0;
         stopAutoSwitch();
         hideTextOverlay();
-        console.log('⏹️ Vidéo arrêtée à frame', index);
       }
 
       // Ajouter la vidéo si on est dans la plage 469-500
       if (index >= 469 && index <= 500) {
-        const mainCanvas = document.getElementById('anim-canvas');
-        const mainCtx = mainCanvas.getContext('2d');
-        
         // Si pas en autoplay, synchro la vidéo avec le scroll
         if (!videoStarted && videoElement && isReady) {
           // Map la frame au temps de la vidéo (proportionnel)
@@ -385,24 +405,9 @@ const VideoScreen = (() => {
 
       // Afficher le texte progressivement à partir de frame 480
       if (index >= 480 && index < videoStartFrame) {
-        const contentElement = document.getElementById('video-text-content');
-        const dotsElement = document.getElementById('video-text-dots');
-        const overlayElement = document.getElementById('video-text-overlay');
         if (contentElement && overlayElement && dotsElement) {
           // Positionner le texte à droite et en bas de l'écran tracké
-          const points = getPointsForFrame(index);
-          if (points) {
-            const referenceImg = Loader.get(index);
-            const mainCanvas = document.getElementById('anim-canvas');
-            const scaleX = mainCanvas.width / referenceImg.naturalWidth;
-            const scaleY = mainCanvas.height / referenceImg.naturalHeight;
-            
-            const scaledTR = { x: points.tr.x * scaleX, y: points.tr.y * scaleY };
-            const scaledBR = { x: points.br.x * scaleX, y: points.br.y * scaleY };
-            
-            overlayElement.style.left = (scaledBR.x + 60) + 'px';
-            overlayElement.style.top = (scaledTR.y + 20) + 'px';
-          }
+          positionTextOverlay(index);
           
           // Fade in progressif basé sur la progression de la frame (480+)
           const fadeProgress = Math.max(0, (index - 480) / 2);
@@ -411,24 +416,9 @@ const VideoScreen = (() => {
         }
       } else if (index < 480 && index >= 469) {
         // Fade out progressif quand on revient avant frame 480
-        const contentElement = document.getElementById('video-text-content');
-        const dotsElement = document.getElementById('video-text-dots');
-        const overlayElement = document.getElementById('video-text-overlay');
         if (contentElement && overlayElement && dotsElement) {
           // Positionner le texte à droite et en bas de l'écran tracké
-          const points = getPointsForFrame(index);
-          if (points) {
-            const referenceImg = Loader.get(index);
-            const mainCanvas = document.getElementById('anim-canvas');
-            const scaleX = mainCanvas.width / referenceImg.naturalWidth;
-            const scaleY = mainCanvas.height / referenceImg.naturalHeight;
-            
-            const scaledTR = { x: points.tr.x * scaleX, y: points.tr.y * scaleY };
-            const scaledBR = { x: points.br.x * scaleX, y: points.br.y * scaleY };
-            
-            overlayElement.style.left = (scaledBR.x + 60) + 'px';
-            overlayElement.style.top = (scaledTR.y + 20) + 'px';
-          }
+          positionTextOverlay(index);
           
           const fadeProgress = (index - 469) / (480 - 469);
           contentElement.style.setProperty('--scroll-opacity', Math.max(fadeProgress, 0));
@@ -436,31 +426,14 @@ const VideoScreen = (() => {
         }
       } else if (index >= videoStartFrame) {
         // Une fois la vidéo lancée, garder le texte visible et positionner à droite de l'écran
-        const contentElement = document.getElementById('video-text-content');
-        const dotsElement = document.getElementById('video-text-dots');
-        const overlayElement = document.getElementById('video-text-overlay');
         if (contentElement && overlayElement && dotsElement) {
-          const points = getPointsForFrame(index);
-          if (points) {
-            const referenceImg = Loader.get(index);
-            const mainCanvas = document.getElementById('anim-canvas');
-            const scaleX = mainCanvas.width / referenceImg.naturalWidth;
-            const scaleY = mainCanvas.height / referenceImg.naturalHeight;
-            
-            const scaledTR = { x: points.tr.x * scaleX, y: points.tr.y * scaleY };
-            const scaledBR = { x: points.br.x * scaleX, y: points.br.y * scaleY };
-            
-            overlayElement.style.left = (scaledBR.x + 60) + 'px';
-            overlayElement.style.top = (scaledTR.y + 20) + 'px';
-          }
+          positionTextOverlay(index);
           
           contentElement.style.setProperty('--scroll-opacity', '1');
           dotsElement.style.opacity = '1';
         }
       } else if (index < 469) {
         // Avant frame 469, texte invisible
-        const contentElement = document.getElementById('video-text-content');
-        const dotsElement = document.getElementById('video-text-dots');
         if (contentElement && dotsElement) {
           contentElement.style.setProperty('--scroll-opacity', '0');
           dotsElement.style.opacity = '0';
@@ -468,18 +441,24 @@ const VideoScreen = (() => {
       }
     };
 
-    console.log('✅ VideoScreen initialisé (Canvas 2D)');
+
   }
 
   // Boucle de rendu indépendante pour la vidéo
   function startVideoLoop() {
+    if (videoLoopRunning) return;
+
+    videoLoopRunning = true;
+
     function loop() {
+      if (!videoStarted) {
+        videoLoopRunning = false;
+        return;
+      }
+
       if (videoStarted && isReady && videoElement && !videoElement.paused) {
         // Forcer un redraw du canvas quand la vidéo joue
         // Cela assure que même si le scroll est arrêté, on continue à voir la vidéo
-        const mainCanvas = document.getElementById('anim-canvas');
-        const mainCtx = mainCanvas.getContext('2d');
-        
         // Redessiner la vidéo à sa position actuelle
         if (currentFrame >= videoStartFrame) {
           drawVideoOnScreen(mainCtx, currentFrame);
