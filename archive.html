@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr" class="archive-document">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archives | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="archive-page">
+  <header id="site-header">
+    <nav class="nav-left">
+      <a href="index.html">Work</a>
+      <a href="archive.html" aria-current="page">Archives</a>
+    </nav>
+    <div class="logo">
+      <img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img">
+    </div>
+    <nav class="nav-right">
+      <a href="about.html">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main class="archive-stage" aria-label="Archives chronologiques">
+    <section class="archive-graph-shell">
+      <div id="archive-graph" aria-label="Constellation de projets"></div>
+      <div class="archive-readout" aria-hidden="true">
+        <span id="archive-current-year">2024</span>
+        <span id="archive-status">0 projects / 0 links</span>
+      </div>
+    </section>
+
+    <nav id="archive-timeline" class="archive-timeline" aria-label="Frise chronologique des archives"></nav>
+  </main>
+
+  <script src="https://unpkg.com/force-graph"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="archive-data.js"></script>
+  <script src="archive-graph.js"></script>
+</body>
+</html>

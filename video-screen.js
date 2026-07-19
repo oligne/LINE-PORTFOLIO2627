@@ -370,7 +370,7 @@ const VideoScreen = (() => {
       // Déclencher autoplay quand on atteint frame 482+
       if (index >= videoStartFrame && !videoStarted && isReady) {
         videoStarted = true;
-        videoElement.play().catch(e => console.log('Auto-play bloqué:', e));
+        videoElement.play().catch(() => {});
         
         // Démarrer le basculement automatique
         startAutoSwitch();

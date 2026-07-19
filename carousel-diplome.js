@@ -42,8 +42,6 @@ const PortfolioCarousels = (() => {
 
     instances.forEach(refreshLayout);
     requestUpdate();
-
-    console.log(`✅ ${instances.length} portfolio carousel(s) initialized`);
   }
 
   function createCarousel(config) {

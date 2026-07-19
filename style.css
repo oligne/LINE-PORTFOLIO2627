@@ -48,6 +48,7 @@ body {
   text-decoration: none;
 }
 .nav-left a:hover, .nav-right a:hover { color: #1a1a1a; }
+.nav-left a[aria-current="page"], .nav-right a[aria-current="page"] { color: #1a1a1a; }
 
 .logo {
   position: absolute;
@@ -563,5 +564,180 @@ body {
 
   .timeline-title {
     font-size: 18px;
+  }
+}
+
+/* Archive page */
+.archive-document,
+.archive-page {
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.archive-page {
+  color: #111;
+  background: #fff;
+}
+
+.archive-stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 640px;
+  padding: 76px clamp(24px, 4vw, 64px) 58px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.archive-graph-shell {
+  position: relative;
+  min-height: 0;
+}
+
+#archive-graph {
+  position: absolute;
+  inset: 0;
+  cursor: default;
+  overflow: hidden;
+}
+
+#archive-graph:active {
+  cursor: default;
+}
+
+#archive-graph canvas {
+  display: block;
+}
+
+.archive-graph-fallback {
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.archive-readout {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: none;
+  gap: 1rem;
+  align-items: baseline;
+  pointer-events: none;
+  color: #aaa;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#archive-current-year {
+  display: none;
+}
+
+.archive-timeline {
+  position: relative;
+  width: min(980px, 72vw);
+  margin: 34px auto 0;
+  padding-top: 14px;
+}
+
+.archive-ticks {
+  display: grid;
+  grid-template-columns: repeat(84, minmax(4px, 1fr));
+  align-items: center;
+  gap: 6px;
+}
+
+.archive-tick {
+  width: 5px;
+  height: 5px;
+  border: 0;
+  border-radius: 50%;
+  background: #e8e8e8;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.archive-tick:hover,
+.archive-tick.is-start {
+  transform: scale(1.45);
+}
+
+.archive-tick.is-visible {
+  background: #111;
+}
+
+.archive-range-handle {
+  position: absolute;
+  top: 12px;
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: #000;
+  color: transparent;
+  cursor: ew-resize;
+  transform: translate(-50%, -3px);
+  z-index: 2;
+  transition: box-shadow 160ms ease;
+}
+
+.archive-range-handle:hover,
+.archive-range-handle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 7px rgba(0, 0, 0, 0.08);
+}
+
+.archive-year-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-top: 17px;
+  transform: translateX(-3px);
+}
+
+.archive-year-labels button {
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.archive-year-labels button:not(.is-visible) {
+  color: #d6d6d6;
+}
+
+.archive-year-labels button.is-start {
+  color: #000;
+}
+
+@media (max-width: 780px) {
+  .archive-stage {
+    min-height: 600px;
+    padding: 94px 18px 38px;
+  }
+
+  .archive-timeline {
+    width: calc(100vw - 42px);
+  }
+
+  .archive-ticks {
+    gap: 4px;
+  }
+
+  .archive-readout {
+    left: 18px;
+    bottom: 8px;
+    transform: none;
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: flex-start;
   }
 }
