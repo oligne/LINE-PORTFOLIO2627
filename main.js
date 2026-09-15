@@ -1,5 +1,8 @@
 Loader.load(() => {
   Canvas.draw(0);
-  VideoScreen.init();
+  const enableSecondaryVideo = false;
+  if (enableSecondaryVideo) {
+    VideoScreen.init();
+  }
   Scroll.init();
 });

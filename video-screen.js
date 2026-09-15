@@ -269,7 +269,7 @@ const VideoScreen = (() => {
     const scaleX = mainCanvas.width / referenceImg.naturalWidth;
     const scaleY = mainCanvas.height / referenceImg.naturalHeight;
     const left = `${points.br.x * scaleX + 60}px`;
-    const top = `${points.tr.y * scaleY + 20}px`;
+    const top = `${points.tr.y * scaleY + 30}px`;
 
     if (left !== lastOverlayLeft) {
       overlayElement.style.left = left;

@@ -17,21 +17,26 @@
   <link rel="preload" as="image" href="./docs/windows/JOUSSETColine_rendu3D_05.png">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="home">
 
-  <div id="loader"><span id="loader-text">Loading — 0%</span></div>
+  <div id="loader"><span id="loader-text" data-i18n="loaderText">Chargement — 0%</span></div>
 
   <header id="site-header">
     <nav class="nav-left">
-      <a href="index.html">Work</a>
-      <a href="archive.html">Archives</a>
+      <a href="index.html" aria-current="page" data-i18n="navWork">Travaux</a>
+      <a href="archive.html" data-i18n="navArchives">Archives</a>
     </nav>
     <div class="logo">
       <img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img">
     </div>
     <nav class="nav-right">
-      <a href="about.html">About</a>
-      <a href="#">Contact</a>
+      <a href="about.html" data-i18n="navAbout">À propos</a>
+      <a href="#" data-i18n="navContact">Contact</a>
+      <div class="language-toggle" role="group" aria-label="Language switcher" data-i18n-aria="languageSwitcherLabel">
+        <button type="button" data-language-option="fr" aria-pressed="true">FR</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" data-language-option="en" aria-pressed="false">ENG</button>
+      </div>
     </nav>
   </header>
 
@@ -46,8 +51,8 @@
           <div class="dot"></div>
         </div>
         <div id="video-text-content" class="show">
-          <h3 id="video-text-title">I see digital tools as</h3>
-          <p id="video-text-description">a way to reshape our sensibility</p>
+          <h3 id="video-text-title" data-i18n="homeVideoTitle">Je vois les outils numériques comme</h3>
+          <p id="video-text-description" data-i18n="homeVideoDescription">une manière de reconfigurer notre sensibilité</p>
         </div>
       </div>
     </div>
@@ -57,24 +62,14 @@
     <div class="content-inner">
       <div class="text-columns">
         <div class="column">
-          <p>Formée au design d'espace à l'École Boulle, j'ai développé une approche sensible et technique de la conception, allant du design d'objet à la création d'installations immersives et de dispositifs spatiaux, où l'espace est structuré au service des usages et d'une intention. Au fil du temps, ma pratique du design d'espace se complète et se nourrit des arts numériques. Mon mémoire de Master 2 à l'Ensaama Olivier de Serre fais office de manifeste quant à la manière de repenser les espaces numériques comme de véritables lieux à habiter, à s'approprier et à investir sensible­ment. Finalement, les espaces physiques et numériques s'hybrident et se prolongent pour ne former qu'un milieu immersif avec lequel on interagit.</p>
+          <p data-i18n="homeParagraphOne">Formée au design d'espace à l'École Boulle, j'ai développé une approche sensible et technique de la conception, allant du design d'objet à la création d'installations immersives et de dispositifs spatiaux, où l'espace est structuré au service des usages et d'une intention. Au fil du temps, ma pratique du design d'espace se complète et se nourrit des arts numériques. Mon mémoire de Master 2 à l'Ensaama Olivier de Serre fais office de manifeste quant à la manière de repenser les espaces numériques comme de véritables lieux à habiter, à s'approprier et à investir sensible­ment. Finalement, les espaces physiques et numériques s'hybrident et se prolongent pour ne former qu'un milieu immersif avec lequel on interagit.</p>
         </div>
         <div class="column">
-          <p>Ces recherches s'appuient sur une maîtrise d'outils numériques tels que la 3D, la CGI, le design génératif en temps réel et les dispositifs d'interaction homme-machine, mobilisés comme un médium à part entière pour penser des formes, des usages et des spatialités hybrides. Mon travail explore la rencontre entre espaces physiques et numériques, non comme des entités opposées mais comme des environnements complémentaires, afin de concevoir des expériences sensibles, incarnées et accessibles, interrogeant nos manières d'habiter, de percevoir et de nous approprier les espaces contemporains.</p>
+          <p data-i18n="homeParagraphTwo">Ces recherches s'appuient sur une maîtrise d'outils numériques tels que la 3D, la CGI, le design génératif en temps réel et les dispositifs d'interaction homme-machine, mobilisés comme un médium à part entière pour penser des formes, des usages et des spatialités hybrides. Mon travail explore la rencontre entre espaces physiques et numériques, non comme des entités opposées mais comme des environnements complémentaires, afin de concevoir des expériences sensibles, incarnées et accessibles, interrogeant nos manières d'habiter, de percevoir et de nous approprier les espaces contemporains.</p>
         </div>
       </div>
       <div class="full-width-image">
-        <img src="./docs/scancarnetHP.png" alt="Carnet de croquis">
-      </div>
-    </div>
-  </section>
-
-  <section id="carousel-section">
-    <div class="horizontal-scroll">
-      <div class="scroll-content"></div>
-      <div class="carousel-text">
-        <h3>Projet diplôme</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+        <img src="./docs/scancarnetHP.png" alt="Carnet de croquis" data-i18n-alt="homeSketchbookAlt">
       </div>
     </div>
   </section>
@@ -83,8 +78,23 @@
     <div class="horizontal-scroll">
       <div class="scroll-content"></div>
       <div class="carousel-text">
-        <h3>Windows</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam nonummy nibh euismod tincidunt.</p>
+        <div class="carousel-copy">
+          <h3 data-i18n-html="windowsCarouselTitle">Ubiquité</h3>
+          <p data-i18n-html="windowsCarouselText">L'interface n'en est que la surface visible : le seuil à travers lequel cet espace second se manifeste, toujours là, toujours actif, même lorsqu'on ne le regarde pas.<br><br>Ubiquité questionne notre rapport à ces interfaces numériques du quotidien. Douze écrans disposés sur une structure autoportante en pin forment une fenêtre à la matérialité nouvelle : un objet familier, démultiplié, initie une expérience et un rapport nouveau à l'outil numérique. Notre fenêtre virtuelle, comme la fenêtre physique, donne à voir, mais implique aussi la possibilité d'être vu depuis l'autre côté.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="carousel-section">
+    <div class="horizontal-scroll">
+      <div class="scroll-content"></div>
+      <div class="carousel-text">
+        <div class="carousel-copy">
+          <h3 data-i18n-html="diplomaCarouselTitle">Projet de diplôme</h3>
+          <h4 data-i18n-html="diplomaCarouselSubtitle">Diplôme 2026</h4>
+          <p data-i18n-html="diplomaCarouselText">Une série d'images en mouvement pensée comme un prolongement du projet de diplôme.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -98,5 +108,6 @@
   <script src="carousel-diplome.js"></script>
   <script src="scroll.js"></script>
   <script src="main.js"></script>
+  <script src="language.js"></script>
 </body>
 </html>

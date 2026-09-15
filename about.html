@@ -8,120 +8,136 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="about-page">
+<body class="about-page" data-page="about">
   <header id="site-header">
     <nav class="nav-left">
-      <a href="index.html">Work</a>
-      <a href="archive.html">Archives</a>
+      <a href="index.html" data-i18n="navWork">Travaux</a>
+      <a href="archive.html" data-i18n="navArchives">Archives</a>
     </nav>
     <div class="logo">
       <img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img">
     </div>
     <nav class="nav-right">
-      <a href="about.html">About</a>
-      <a href="#">Contact</a>
+      <a href="about.html" aria-current="page" data-i18n="navAbout">À propos</a>
+      <a href="#" data-i18n="navContact">Contact</a>
+      <div class="language-toggle" role="group" aria-label="Language switcher" data-i18n-aria="languageSwitcherLabel">
+        <button type="button" data-language-option="fr" aria-pressed="true">FR</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" data-language-option="en" aria-pressed="false">ENG</button>
+      </div>
     </nav>
   </header>
 
   <main class="about-layout">
-    <section class="about-profile" aria-label="Profil">
+    <section class="about-profile" aria-label="Profil" data-i18n-aria="aboutProfileLabel">
       <div class="about-photo">
-        <img src="./docs/portrait.png" alt="Portrait de Coline Jousset">
+        <img src="./docs/portrait.png" alt="Portrait de Coline Jousset" data-i18n-alt="aboutPortraitAlt">
       </div>
       <div class="about-identity">
         <h1>Coline Jousset</h1>
-        <p>New Media Artist<br>Space designer</p>
-        <p class="about-muted">École Boulle (2020-2024)<br>ENSAAMA Olivier de Serres (2024-2026)</p>
+        <p data-i18n-html="aboutRole">Artiste new media<br>Designer d'espace</p>
+        <p class="about-muted" data-i18n-html="aboutEducationLine">École Boulle (2020-2024)<br>ENSAAMA Olivier de Serres (2024-2026)</p>
         <div class="about-socials">
-          <a href="#" aria-label="Instagram">ig</a>
-          <a href="#" aria-label="Email">@</a>
-          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Instagram" data-i18n-aria="socialInstagramLabel">ig</a>
+          <a href="#" aria-label="Email" data-i18n-aria="socialEmailLabel">@</a>
+          <a href="#" aria-label="LinkedIn" data-i18n-aria="socialLinkedInLabel">in</a>
         </div>
       </div>
     </section>
 
-    <section class="about-timeline" aria-label="Parcours">
-      <div class="timeline-block">
-        <h3 class="timeline-section-title">Education</h3>
-        <article class="timeline-entry">
-          <h2>2024-<br>2026</h2>
-          <div>
-            <p class="timeline-school">ENSAAMA Olivier de Serres, Paris 15e</p>
-            <p class="timeline-title">DSAA (Master Degree) in Digital Arts<br>New Media Artist</p>
-            <p class="timeline-note">Completion expected in June 2026</p>
-          </div>
-        </article>
-
-        <article class="timeline-entry">
-          <h2>2020-<br>2024</h2>
-          <div>
-            <p class="timeline-school">École Boulle, Paris 12e</p>
-            <p class="timeline-title">DNMADE in Space Design:<br>Housing, Territories, and Social Innovation</p>
-            <p class="timeline-note">Awarded with Professional Excellence Distinction</p>
-          </div>
-        </article>
-
-        <article class="timeline-entry">
-          <h2>2018-<br>2020</h2>
-          <div>
-            <p class="timeline-school">Lycée de la communication Saint-Geraud, Aurillac (15)</p>
-            <p class="timeline-title">STD2A Baccalaureate<br>Science and Technology in Design and Applied Arts</p>
-            <p class="timeline-note">Graduated with High Honors</p>
-          </div>
-        </article>
-      </div>
-
+    <section class="about-timeline" aria-label="Parcours" data-i18n-aria="aboutJourneyLabel">
       <div class="timeline-block timeline-block-spaced">
-        <h3 class="timeline-section-title">Highlights</h3>
+        <h3 class="timeline-section-title" data-i18n="aboutHighlights">Temps forts</h3>
+        <article class="timeline-entry">
+          <h2>Sept.<br>26</h2>
+          <div>
+            <p class="timeline-school" data-i18n="aboutHighlight1School1">Exposition collective</p>
+            <p class="timeline-title" data-i18n="aboutHighlight1Title">Vivement Demain #5, Mobilier national</p>
+            <p class="timeline-note" data-i18n="aboutHighlight1Note">Ubiquité visible dans le cadre de la Paris Design Week 2026, au Mobilier national.</p>
+          </div>
+        </article>
+
         <article class="timeline-entry">
           <h2>April-<br>June<br>26</h2>
           <div>
-            <p class="timeline-school">Exhibition</p>
-            <p class="timeline-title">Gaîté Lyrique, Artiste n. curated by Ét1celle</p>
-            <p class="timeline-note">Exhibition presented as part of Ét1celle Festival with Cop1 - Solidarités Étudiantes, bringing together young artists and plural approaches to contemporary creation.</p>
+            <p class="timeline-school" data-i18n="aboutHighlight2School">Exposition</p>
+            <p class="timeline-title" data-i18n="aboutHighlight2Title">Gaîté Lyrique, artiste n.</p>
+            <p class="timeline-note" data-i18n="aboutHighlight2Note">Exposition collective présentée dans le cadre du festival Ét1celle avec Cop1 - Solidarités Étudiantes, réunissant de jeunes artistes et des approches plurielles de la création contemporaine.</p>
           </div>
         </article>
 
         <article class="timeline-entry">
           <h2>April<br>24</h2>
           <div>
-            <p class="timeline-school">Finalist - Prix Jeune Création du Mobilier National 2024</p>
-            <p class="timeline-title">La Grande Matériauthèque: Itinera Senssum</p>
-            <p class="timeline-note">Design of the architectural and graphic identity for the future Grande Matériauthèque.</p>
+            <p class="timeline-school" data-i18n="aboutHighlight3School">Concours</p>
+            <p class="timeline-title" data-i18n="aboutHighlight3Title">Prix Jeune Création 2024, Mobilier national</p>
+            <p class="timeline-note" data-i18n="aboutHighlight3Note">Projet finaliste, conception de l'identité architecturale et graphique de la future Grande Matériauthèque du Campus des Métiers d'Arts et du Design (Projet Itinera Senssum).</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="timeline-block">
+        <h3 class="timeline-section-title" data-i18n="aboutEducation">Formation</h3>
+        <article class="timeline-entry">
+          <h2>2024-<br>2026</h2>
+          <div>
+            <p class="timeline-school" data-i18n="aboutEdu1School">ENSAAMA Olivier de Serres, Paris 15e</p>
+            <p class="timeline-title" data-i18n-html="aboutEdu1Title">DSAA (Master degree) in Digital Arts<br>New Media Artist</p>
+            <p class="timeline-note" data-i18n="aboutEdu1Note">Obtention prévue en juin 2026</p>
+          </div>
+        </article>
+
+        <article class="timeline-entry">
+          <h2>2020-<br>2024</h2>
+          <div>
+            <p class="timeline-school" data-i18n="aboutEdu2School">École Boulle, Paris 12e</p>
+            <p class="timeline-title" data-i18n-html="aboutEdu2Title">DNMADE in Space Design:<br>Housing, Territories, and Social Innovation</p>
+            <p class="timeline-note" data-i18n="aboutEdu2Note">Diplôme obtenu avec la mention d'excellence professionnelle</p>
+          </div>
+        </article>
+
+        <article class="timeline-entry">
+          <h2>2018-<br>2020</h2>
+          <div>
+            <p class="timeline-school" data-i18n="aboutEdu3School">Lycée de la communication Saint-Geraud, Aurillac (15)</p>
+            <p class="timeline-title" data-i18n-html="aboutEdu3Title">STD2A Baccalaureate<br>Science and Technology in Design and Applied Arts</p>
+            <p class="timeline-note" data-i18n="aboutEdu3Note">Diplômée avec les félicitations du jury</p>
           </div>
         </article>
       </div>
 
       <div class="timeline-block timeline-block-spaced">
-        <h3 class="timeline-section-title">Professional experience</h3>
+        <h3 class="timeline-section-title" data-i18n="aboutExperience">Expérience professionnelle</h3>
         <article class="timeline-entry">
           <h2>March-<br>August<br>25</h2>
           <div>
-            <p class="timeline-school">Internship</p>
-            <p class="timeline-title">Collectif Scale</p>
-            <p class="timeline-note">Construction worksite support (wood, electronics, LEDs...) and prototyping for installations (including Toron and Figures). Handling, scenography, and live production for Into the Light at La Villette, MaM, Cabaret Sauvage, and other venues.</p>
+            <p class="timeline-school" data-i18n="aboutExp1School">Stage</p>
+            <p class="timeline-title" data-i18n="aboutExp1Title">Collectif Scale</p>
+            <p class="timeline-note" data-i18n="aboutExp1Note">Appui chantier (bois, électronique, LED...) et prototypage pour des installations (dont Toron et Figures). Manutention, scénographie et production live pour Into the Light à La Villette, MaM, Cabaret Sauvage et d'autres lieux.</p>
           </div>
         </article>
 
         <article class="timeline-entry">
           <h2>May-<br>August<br>23</h2>
           <div>
-            <p class="timeline-school">Assistant Designer</p>
-            <p class="timeline-title">FA Studio - Paris 11ème</p>
-            <p class="timeline-note">Design, technical drawings, and 3D modeling for various premium fast-casual restaurant concepts.</p>
+            <p class="timeline-school" data-i18n="aboutExp2School">Assistante designer</p>
+            <p class="timeline-title" data-i18n="aboutExp2Title">FA Studio - Paris 11e</p>
+            <p class="timeline-note" data-i18n="aboutExp2Note">Conception, dessins techniques et modélisation 3D pour différents concepts de restauration premium et fast-casual.</p>
           </div>
         </article>
 
         <article class="timeline-entry">
           <h2>April<br>22</h2>
           <div>
-            <p class="timeline-school">Photography Report</p>
-            <p class="timeline-title">JMW Studio - Paris 12ème</p>
-            <p class="timeline-note">Observation within the glassblowing and bronze assembly workshop of Jeremy Maxwell Wintrebert and his team.</p>
+            <p class="timeline-school" data-i18n="aboutExp3School">Reportage photo</p>
+            <p class="timeline-title" data-i18n="aboutExp3Title">JMW Studio - Paris 12e</p>
+            <p class="timeline-note" data-i18n="aboutExp3Note">Observation au sein de l'atelier de soufflage de verre et d'assemblage bronze de Jeremy Maxwell Wintrebert et de son équipe.</p>
           </div>
         </article>
       </div>
     </section>
   </main>
+
+  <script src="language.js"></script>
 </body>
 </html>

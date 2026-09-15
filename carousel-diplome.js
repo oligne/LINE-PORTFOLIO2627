@@ -4,16 +4,6 @@ const PortfolioCarousels = (() => {
 
   const carouselConfigs = [
     {
-      id: 'carousel-section',
-      label: 'Diplome project',
-      images: [
-        { src: './docs/proj_diplome/JOUSSETColine_photo_03.png', width: 2406, height: 1600 },
-        { src: './docs/proj_diplome/JOUSSETColine_photo_04.png', width: 2605, height: 1630 },
-        { src: './docs/proj_diplome/JOUSSETColine_photo_06.png', width: 1600, height: 2406 },
-        { src: './docs/proj_diplome/JOUSSETColine_photo_07.png', width: 1368, height: 1948 }
-      ]
-    },
-    {
       id: 'windows-carousel-section',
       label: 'Windows project',
       images: [
@@ -22,6 +12,16 @@ const PortfolioCarousels = (() => {
         { src: './docs/windows/JOUSSETColine_rendu3D_03.png', width: 955, height: 588 },
         { src: './docs/windows/JOUSSETColine_rendu3D_04.png', width: 480, height: 587 },
         { src: './docs/windows/JOUSSETColine_rendu3D_05.png', width: 483, height: 592 }
+      ]
+    },
+    {
+      id: 'carousel-section',
+      label: 'Diplome project',
+      images: [
+        { src: './docs/proj_diplome/JOUSSETColine_photo_03.png', width: 2406, height: 1600 },
+        { src: './docs/proj_diplome/JOUSSETColine_photo_04.png', width: 2605, height: 1630 },
+        { src: './docs/proj_diplome/JOUSSETColine_photo_06.png', width: 1600, height: 2406 },
+        { src: './docs/proj_diplome/JOUSSETColine_photo_07.png', width: 1368, height: 1948 }
       ]
     }
   ];
@@ -53,8 +53,10 @@ const PortfolioCarousels = (() => {
 
     const horizontalScroll = section.querySelector('.horizontal-scroll');
     const scrollContent = section.querySelector('.scroll-content');
+    const carouselText = section.querySelector('.carousel-text');
+    const carouselCopy = section.querySelector('.carousel-copy');
 
-    if (!horizontalScroll || !scrollContent) {
+    if (!horizontalScroll || !scrollContent || !carouselText || !carouselCopy) {
       console.warn(`⚠️ Carousel elements not found: ${config.id}`);
       return null;
     }
@@ -64,12 +66,15 @@ const PortfolioCarousels = (() => {
       section,
       horizontalScroll,
       scrollContent,
+      carouselText,
+      carouselCopy,
       pinDistance: 0,
       initialTranslate: 20,
       finalTranslate: 20,
       textAnchorOffset: 0,
       textAnchorWidth: 0,
-      textGap: 0
+      textGap: 0,
+      textBaseOffset: 0
     };
 
     config.images.forEach((image, index) => {
@@ -89,7 +94,7 @@ const PortfolioCarousels = (() => {
   }
 
   function refreshLayout(instance) {
-    const { section, horizontalScroll, scrollContent } = instance;
+    const { section, horizontalScroll, scrollContent, carouselText, carouselCopy } = instance;
 
     const images = scrollContent.querySelectorAll('.carousel-image');
     const firstRemainingImage = images[Math.max(images.length - 2, 0)];
@@ -111,6 +116,17 @@ const PortfolioCarousels = (() => {
     const horizontalTravel = Math.abs(instance.finalTranslate - instance.initialTranslate);
     const minPinDistance = window.innerHeight * 2.9;
     instance.pinDistance = Math.max(minPinDistance, horizontalTravel * 1.42);
+
+    const textOverflow = Math.max(carouselCopy.scrollHeight - carouselText.clientHeight, 0);
+    const textOverflowRatio = carouselText.clientHeight ? textOverflow / carouselText.clientHeight : 0;
+    const isUbiquityCarousel = instance.config.id === 'windows-carousel-section';
+    const paragraph = carouselCopy.querySelector('p');
+    const paragraphLineHeight = paragraph ? parseFloat(getComputedStyle(paragraph).lineHeight) || 24 : 24;
+    instance.textScrollDistance = isUbiquityCarousel
+      ? (textOverflow * 3.6) + (carouselText.clientHeight * 0.65) + (paragraphLineHeight * 6)
+      : (textOverflow * (1 + (textOverflowRatio * 0.35)) + (carouselText.clientHeight * 0.12));
+    instance.textBaseOffset = window.innerWidth < 700 ? 14 : 26;
+    instance.textScrollOffset = 0;
 
     section.style.minHeight = `${horizontalScroll.offsetHeight + instance.pinDistance}px`;
 
@@ -134,7 +150,7 @@ const PortfolioCarousels = (() => {
   }
 
   function update(instance) {
-    const { section, horizontalScroll, scrollContent } = instance;
+    const { section, horizontalScroll, scrollContent, carouselText, carouselCopy } = instance;
 
     const sectionTop = section.getBoundingClientRect().top + window.scrollY;
     const stickyTop = (window.innerHeight - horizontalScroll.offsetHeight) / 2;
@@ -144,13 +160,24 @@ const PortfolioCarousels = (() => {
     const progress = clamp(rawProgress, 0, 1);
     const smoothProgress = smoothstep(progress);
     const translateX = lerp(instance.initialTranslate, instance.finalTranslate, smoothProgress);
-    const textProgress = clamp((progress - 0.74) / 0.18, 0, 1);
+    const textProgressStart = instance.config.id === 'windows-carousel-section' ? 0.78 : 0.76;
+    const textProgressRange = instance.config.id === 'windows-carousel-section' ? 0.34 : 0.22;
+    const textProgress = clamp((progress - textProgressStart) / textProgressRange, 0, 1);
     const textLeft = instance.textAnchorOffset + translateX + instance.textAnchorWidth + instance.textGap;
+    const textOverflow = Math.max(carouselCopy.scrollHeight - carouselText.clientHeight, 0);
+    const textOverflowRatio = carouselText.clientHeight ? textOverflow / carouselText.clientHeight : 0;
+    const textScrollStart = instance.config.id === 'windows-carousel-section' ? 0.84 : 0.82;
+    const textScrollRange = instance.config.id === 'windows-carousel-section'
+      ? clamp(0.7 + (textOverflowRatio * 0.28), 0.7, 1)
+      : clamp(0.2 + (textOverflowRatio * 0.22), 0.2, 0.5);
+    const textScrollProgress = clamp((progress - textScrollStart) / textScrollRange, 0, 1);
+    const textScrollOffset = (instance.textScrollDistance || 0) * textScrollProgress;
 
     scrollContent.style.transform = `translate3d(${translateX}px, 0, 0)`;
     horizontalScroll.style.setProperty('--carousel-text-left', `${textLeft}px`);
     horizontalScroll.style.setProperty('--carousel-text-opacity', easeOutCubic(textProgress));
     horizontalScroll.style.setProperty('--carousel-text-y', `${lerp(18, 0, easeOutCubic(textProgress))}px`);
+    carouselCopy.style.transform = `translate3d(0, ${instance.textBaseOffset - textScrollOffset}px, 0)`;
   }
 
   function getLeadInDistance() {
