@@ -5,7 +5,7 @@ const PortfolioCarousels = (() => {
   const carouselConfigs = [
     {
       id: 'windows-carousel-section',
-      label: 'Windows project',
+      labelKey: 'carouselWindowsAltLabel',
       images: [
         { src: './docs/windows/JOUSSETColine_rendu3D_01.png', width: 449, height: 590 },
         { src: './docs/windows/JOUSSETColine_rendu3D_02.png', width: 420, height: 592 },
@@ -82,7 +82,7 @@ const PortfolioCarousels = (() => {
       img.src = image.src;
       img.width = image.width;
       img.height = image.height;
-      img.alt = `${config.label} ${index + 1}`;
+      img.alt = `${getLabel(config.labelKey)} ${index + 1}`;
       img.className = 'carousel-image';
       img.style.setProperty('--image-ratio', `${image.width} / ${image.height}`);
       img.decoding = 'async';
@@ -91,6 +91,10 @@ const PortfolioCarousels = (() => {
     });
 
     return instance;
+  }
+
+  function getLabel(key) {
+    return window.PortfolioI18n?.t(key) || '';
   }
 
   function refreshLayout(instance) {
@@ -200,11 +204,25 @@ const PortfolioCarousels = (() => {
     return value * value * (3 - 2 * value);
   }
 
+  function refreshLanguage() {
+    document.querySelectorAll('.carousel-image').forEach((img) => {
+      const section = img.closest('#carousel-section, #windows-carousel-section');
+      const baseLabel = section && section.id === 'windows-carousel-section'
+        ? getLabel('carouselWindowsAltLabel')
+        : getLabel('carouselDiplomeAltLabel');
+      const index = Array.from(img.parentElement.children).indexOf(img) + 1;
+      img.alt = `${baseLabel} ${index}`;
+    });
+  }
+
   // API publique
   return {
-    init
+    init,
+    refreshLanguage
   };
 })();
+
+window.PortfolioCarousels = PortfolioCarousels;
 
 // Initialiser quand le DOM est prêt
 if (document.readyState === 'loading') {

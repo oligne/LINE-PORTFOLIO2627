@@ -30,10 +30,12 @@ const Loader = (() => {
     img.src = CONFIG.framePath(index);
     img.onload = img.onerror = () => {
       loadedCount += 1;
-      loaderText.textContent = `Loading — ${Math.round(loadedCount / CONFIG.totalFrames * 100)}%`;
+      const label = window.PortfolioI18n?.t('loaderTextSuffix') || 'Loading';
+      loaderText.textContent = `${label} — ${Math.round(loadedCount / CONFIG.totalFrames * 100)}%`;
 
       if (loadedCount === CONFIG.totalFrames) {
         loaderEl.classList.add('hidden');
+        if (loaderText) loaderText.textContent = window.PortfolioI18n?.t('loaderTextDone') || 'Loading complete';
         onComplete();
         return;
       }
@@ -46,5 +48,18 @@ const Loader = (() => {
 
   function get(i) { return images[i] || null; }
 
-  return { load, get };
+  function refreshLanguage() {
+    if (!loaderText) return;
+    if (loadedCount === CONFIG.totalFrames) {
+      loaderText.textContent = window.PortfolioI18n?.t('loaderTextDone') || 'Loading complete';
+      return;
+    }
+
+    const label = window.PortfolioI18n?.t('loaderTextSuffix') || 'Loading';
+    loaderText.textContent = `${label} — ${Math.round(loadedCount / CONFIG.totalFrames * 100)}%`;
+  }
+
+  return { load, get, refreshLanguage };
 })();
+
+window.Loader = Loader;

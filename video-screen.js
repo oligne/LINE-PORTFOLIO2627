@@ -25,20 +25,20 @@ const VideoScreen = (() => {
     {
       name: 'state1',
       videoSrc: './docs/vid01HP.mov',
-      title: 'I see digital tools as',
-      description: 'a way to reshape our sensibility'
+      titleKey: 'homeVideoState1Title',
+      descriptionKey: 'homeVideoState1Description'
     },
     {
       name: 'state2',
       videoSrc: './docs/vid02HP.mp4',
-      title: 'I transform digital into a way to rediscover',
-      description: 'mouvement, sensation and emotions'
+      titleKey: 'homeVideoState2Title',
+      descriptionKey: 'homeVideoState2Description'
     },
     {
       name: 'state3',
       videoSrc: './docs/vid03HP.mp4',
-      title: 'I explore links between',
-      description: 'screen, space and mind.'
+      titleKey: 'homeVideoState3Title',
+      descriptionKey: 'homeVideoState3Description'
     }
   ];
 
@@ -92,7 +92,7 @@ const VideoScreen = (() => {
     const state = states[currentStateIndex];
     
     // Animer le texte
-    updateTextOverlay(state.title, state.description);
+    updateTextOverlay(getStateText(state.titleKey), getStateText(state.descriptionKey));
     
     // Reset le timer auto-switch pour que la nouvelle vidéo reste 5 secondes
     stopAutoSwitch();
@@ -163,6 +163,18 @@ const VideoScreen = (() => {
       contentElement.classList.add('show');
       updateDots();
     }, 400);
+  }
+
+  function getStateText(key) {
+    return window.PortfolioI18n?.t(key) || '';
+  }
+
+  function refreshLanguage() {
+    const state = states[currentStateIndex];
+    if (!state) return;
+
+    if (titleElement) titleElement.textContent = getStateText(state.titleKey);
+    if (descElement) descElement.textContent = getStateText(state.descriptionKey);
   }
 
   // Masquer l'overlay de texte
@@ -376,7 +388,7 @@ const VideoScreen = (() => {
         startAutoSwitch();
         // Afficher le texte avec le premier état
         const state = states[currentStateIndex];
-        updateTextOverlay(state.title, state.description);
+        updateTextOverlay(getStateText(state.titleKey), getStateText(state.descriptionKey));
         startVideoLoop();
       }
 
@@ -469,5 +481,7 @@ const VideoScreen = (() => {
     requestAnimationFrame(loop);
   }
 
-  return { init, switchState };
+  return { init, switchState, refreshLanguage };
 })();
+
+window.VideoScreen = VideoScreen;

@@ -8,36 +8,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="archive-page">
+<body class="archive-page" data-page="archive">
   <header id="site-header">
     <nav class="nav-left">
-      <a href="index.html">Work</a>
-      <a href="archive.html" aria-current="page">Archives</a>
+      <a href="index.html" data-i18n="navWork">Travaux</a>
+      <a href="archive.html" aria-current="page" data-i18n="navArchives">Archives</a>
     </nav>
     <div class="logo">
       <img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img">
     </div>
     <nav class="nav-right">
-      <a href="about.html">About</a>
-      <a href="#">Contact</a>
+      <a href="about.html" data-i18n="navAbout">À propos</a>
+      <a href="#" data-i18n="navContact">Contact</a>
+      <div class="language-toggle" role="group" aria-label="Language switcher" data-i18n-aria="languageSwitcherLabel">
+        <button type="button" data-language-option="fr" aria-pressed="true">FR</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" data-language-option="en" aria-pressed="false">ENG</button>
+      </div>
     </nav>
   </header>
 
-  <main class="archive-stage" aria-label="Archives chronologiques">
+  <main class="archive-stage" aria-label="Archives chronologiques" data-i18n-aria="archiveStageLabel">
     <section class="archive-graph-shell">
-      <div id="archive-graph" aria-label="Constellation de projets"></div>
+      <div id="archive-graph" aria-label="Constellation de projets" data-i18n-aria="archiveGraphLabel"></div>
       <div class="archive-readout" aria-hidden="true">
         <span id="archive-current-year">2024</span>
         <span id="archive-status">0 projects / 0 links</span>
       </div>
     </section>
 
-    <nav id="archive-timeline" class="archive-timeline" aria-label="Frise chronologique des archives"></nav>
+    <nav id="archive-timeline" class="archive-timeline" aria-label="Frise chronologique des archives" data-i18n-aria="archiveTimelineLabel"></nav>
   </main>
 
   <script src="https://unpkg.com/force-graph"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="archive-data.js"></script>
+  <script src="language.js"></script>
   <script src="archive-graph.js"></script>
 </body>
 </html>

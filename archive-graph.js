@@ -17,7 +17,7 @@
     })
     .catch((error) => {
       graphEl.classList.add('archive-graph-fallback');
-      graphEl.textContent = 'Archive data unavailable';
+      graphEl.textContent = window.PortfolioI18n?.t('archiveDataUnavailable') || 'Archive data unavailable';
       console.error(error);
     });
 
@@ -46,10 +46,16 @@
   let graph = null;
   let handleEl = null;
   let isDragging = false;
+  let lastNodeCount = 0;
+  let lastLinkCount = 0;
 
   buildTimeline();
   initGraph();
   setVisibleStart(visibleStartMonth, false);
+
+  if (window.PortfolioI18n) {
+    window.PortfolioI18n.refreshArchive = refreshArchiveLabels;
+  }
 
   function buildNodes() {
     const projectNodes = source.projects.map((project, index) => {
@@ -59,13 +65,19 @@
       const x = project.position ? project.position.x : fallback.x;
       const y = (project.position ? project.position.y : fallback.y) * verticalCompression;
 
+      const baseScale = typeof project.scale === 'number' ? project.scale : 0.6;
+      // size: 1,2,3 (3 = current size). Map to multipliers for coherent visual sizes.
+      const sizeMultiplier = typeof project.size === 'number'
+        ? (project.size === 3 ? 1 : project.size === 2 ? 0.66 : 0.42)
+        : 1;
+
       return {
         ...project,
         month,
         activeStartMonth: month,
         activeEndMonth,
-        val: 4 + project.scale * 8,
-        radius: 3 + project.scale * 3.4,
+        val: Math.max(1, Math.round((4 + baseScale * 8) * sizeMultiplier)),
+        radius: (3 + baseScale * 3.4) * sizeMultiplier,
         homeX: x,
         homeY: y,
         targetX: x,
@@ -231,7 +243,7 @@
     handleEl = document.createElement('button');
     handleEl.type = 'button';
     handleEl.className = 'archive-range-handle';
-    handleEl.setAttribute('aria-label', 'Start of visible archive range');
+    handleEl.setAttribute('aria-label', window.PortfolioI18n?.t('archiveRangeHandleLabel') || 'Start of visible archive range');
     handleEl.addEventListener('pointerdown', startDrag);
 
     const labelsEl = document.createElement('div');
@@ -251,7 +263,7 @@
   function initGraph() {
     if (typeof ForceGraph !== 'function') {
       graphEl.classList.add('archive-graph-fallback');
-      graphEl.textContent = 'Archive graph unavailable';
+      graphEl.textContent = window.PortfolioI18n?.t('archiveGraphUnavailable') || 'Archive graph unavailable';
       return;
     }
 
@@ -475,15 +487,28 @@
       groupsByRoot.get(root).push(node);
     });
 
-    const groups = Array.from(groupsByRoot.entries())
-      .map(([id, nodes]) => ({
-        id,
-        nodes,
-        averageMonth: nodes.reduce((sum, node) => sum + visibleProjectMonth(node), 0) / nodes.length,
-        averageLane: nodes.reduce((sum, node) => sum + categoryLane(node), 0) / nodes.length,
-        width: clamp(54 + nodes.length * 22 + directLinkCount(nodes) * 3, nodes.length === 1 ? 46 : 96, 220)
-      }))
-      .sort((a, b) => a.averageMonth - b.averageMonth || a.id.localeCompare(b.id));
+    // split by root then by primary theme to create clearer thematic islands
+    const groups = [];
+    Array.from(groupsByRoot.entries()).forEach(([rootId, nodes]) => {
+      const byTheme = nodes.reduce((acc, node) => {
+        const theme = primaryTheme(node) || 'other';
+        if (!acc[theme]) acc[theme] = [];
+        acc[theme].push(node);
+        return acc;
+      }, {});
+
+      Object.entries(byTheme).forEach(([theme, tnodes]) => {
+        groups.push({
+          id: `${rootId}::${theme}`,
+          nodes: tnodes,
+          averageMonth: tnodes.reduce((sum, node) => sum + visibleProjectMonth(node), 0) / tnodes.length,
+          averageLane: tnodes.reduce((sum, node) => sum + categoryLane(node), 0) / tnodes.length,
+          width: clamp(54 + tnodes.length * 22 + directLinkCount(tnodes) * 3, tnodes.length === 1 ? 46 : 96, 220)
+        });
+      });
+    });
+
+    groups.sort((a, b) => a.averageMonth - b.averageMonth || a.id.localeCompare(b.id));
 
     const minMonth = Math.min(...projectNodes.map(visibleProjectMonth));
     const maxMonth = Math.max(...projectNodes.map(visibleProjectMonth));
@@ -771,7 +796,24 @@
 
   function updateStatus(nodeCount, linkCount) {
     if (!statusEl) return;
-    statusEl.textContent = `${tickLabel(visibleStartMonth)} - 2026 / ${nodeCount} points / ${linkCount} links`;
+    lastNodeCount = nodeCount;
+    lastLinkCount = linkCount;
+    statusEl.textContent = window.PortfolioI18n?.t('archiveStatus', {
+      period: tickLabel(visibleStartMonth),
+      year: '2026',
+      nodeCount,
+      linkCount
+    }) || `${tickLabel(visibleStartMonth)} - 2026 / ${nodeCount} points / ${linkCount} links`;
+  }
+
+  function refreshArchiveLabels() {
+    if (handleEl) {
+      handleEl.setAttribute('aria-label', window.PortfolioI18n?.t('archiveRangeHandleLabel') || 'Start of visible archive range');
+    }
+
+    if (statusEl) {
+      updateStatus(lastNodeCount, lastLinkCount);
+    }
   }
 
   function startDrag(event) {

@@ -40,15 +40,49 @@ body {
 }
 
 .nav-left, .nav-right { display: flex; gap: 2rem; }
+.nav-right { align-items: center; }
 .nav-left a, .nav-right a {
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #888;
   text-decoration: none;
+  font-weight: 300;
 }
 .nav-left a:hover, .nav-right a:hover { color: #1a1a1a; }
-.nav-left a[aria-current="page"], .nav-right a[aria-current="page"] { color: #1a1a1a; }
+.nav-left a[aria-current="page"], .nav-right a[aria-current="page"] {
+  color: #1a1a1a;
+  font-weight: 400;
+}
+
+.language-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.35rem;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.language-toggle button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  font-weight: 300;
+}
+
+.language-toggle button[aria-pressed="true"] {
+  color: #1a1a1a;
+  font-weight: 400;
+}
+
+.language-toggle span { color: #bbb; }
 
 .language-toggle {
   display: inline-flex;
@@ -394,6 +428,14 @@ body {
 
   .carousel-text p {
     font-size: 14px;
+  }
+
+  .nav-left, .nav-right {
+    gap: 1.2rem;
+  }
+
+  #site-header {
+    padding: 0 1rem;
   }
 }
 

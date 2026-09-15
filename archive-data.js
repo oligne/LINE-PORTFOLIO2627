@@ -54,6 +54,9 @@
         const category = stringValue(row.categorie);
         const layout = layoutSeed(row, year, index);
 
+        const rawSize = numberValue(row.size) || numberValue(row.point_size) || numberValue(row.taille_point) || 0;
+        const size = clamp(Math.round(rawSize) || 0, 0, 3) || 0;
+
         return {
           id,
           title,
@@ -65,6 +68,7 @@
           category,
           pole: normalizePole(category),
           scale: clamp(numberValue(row.taille) || numberValue(row.echelle_visuelle_0_1) || 0.62, 0.25, 1.15),
+          size,
           themes: [],
           tools: splitTags(row.logiciels),
           toolKeys: splitTags(row.logiciels).map(normalizeToken).filter(Boolean),
@@ -72,15 +76,11 @@
           mediums: [],
           context: '',
           layout,
-          position: { x: layout.x, y: layout.y },
           follows: splitLinks(row.liens || row.liens_progression_ids)
         };
       });
 
-    distributeProjects(projects);
-    projects.forEach((project) => {
-      delete project.layout;
-    });
+    // do not compute positions here. graph handles layout and positioning.
     return projects;
   }
 
@@ -224,41 +224,8 @@
   }
 
   function distributeProjects(projects) {
-    projects.sort((a, b) => a.year - b.year || a.id.localeCompare(b.id));
-    const projectMap = new Map(projects.map((project) => [project.id, project]));
-
-    projects.forEach((project, index) => {
-      const yearRatio = clamp((project.year - 2020) / 6, 0, 1);
-      project.position = {
-        x: project.layout.x,
-        y: project.layout.y + Math.sin(index * 2.23) * 18 + (yearRatio - 0.5) * 12
-      };
-    });
-
-    for (let pass = 0; pass < 110; pass += 1) {
-      for (let i = 0; i < projects.length; i += 1) {
-        for (let j = i + 1; j < projects.length; j += 1) {
-          separatePair(projects[i], projects[j]);
-        }
-      }
-
-      projects.forEach((project) => {
-        project.follows.forEach((sourceId) => {
-          const source = projectMap.get(sourceId);
-          if (source) attractPair(source, project, 0.009);
-        });
-      });
-
-      projects.forEach((project) => {
-        project.position.x += (project.layout.x - project.position.x) * 0.018;
-        project.position.y += (project.layout.y - project.position.y) * 0.018;
-      });
-    }
-
-    projects.forEach((project) => {
-      project.position.x = Math.round(project.position.x);
-      project.position.y = Math.round(project.position.y);
-    });
+    // data only used for import; graph computes layout. no-op here.
+    return projects;
   }
 
   function separatePair(first, second) {
@@ -268,7 +235,7 @@
     const sameYear = first.year === second.year;
     const sameCategory = normalizeToken(first.category) === normalizeToken(second.category);
     const sharedTool = first.tools.some((tool) => second.tools.map(normalizeToken).includes(normalizeToken(tool)));
-    const wanted = 36 + (first.scale + second.scale) * 11 + (sameYear ? 12 : 0) + (!sameCategory ? 8 : 0) - (sharedTool ? 5 : 0);
+    const wanted = 22 + (first.scale + second.scale) * 8 + (sameYear ? 8 : 0) + (!sameCategory ? 4 : 0) - (sharedTool ? 4 : 0);
     if (distance >= wanted) return;
 
     const push = (wanted - distance) * 0.5;
