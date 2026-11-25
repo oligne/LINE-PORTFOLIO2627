@@ -86,7 +86,7 @@ const PortfolioCarousels = (() => {
       img.className = 'carousel-image';
       img.style.setProperty('--image-ratio', `${image.width} / ${image.height}`);
       img.decoding = 'async';
-      img.loading = 'eager';
+      img.loading = 'lazy';
       scrollContent.appendChild(img);
     });
 

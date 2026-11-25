@@ -55,6 +55,7 @@ const Canvas = (() => {
   function draw(index, scrollProgress = 0) {
     lastFrame = index;
     lastScrollProgress = scrollProgress;
+    Loader.request(index);
     const img = Loader.get(index);
     if (!img || !img.complete || !img.naturalWidth) return;
 

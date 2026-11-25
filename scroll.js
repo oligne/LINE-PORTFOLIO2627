@@ -36,7 +36,8 @@ const Scroll = (() => {
 
   function init() {
     window.addEventListener('scroll', requestDraw, { passive: true });
+    requestDraw();
   }
 
-  return { init };
+  return { init, requestDraw };
 })();
