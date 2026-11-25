@@ -2,9 +2,9 @@ const Loader = (() => {
   const images = new Map();
   const pending = new Set();
   const failed = new Set();
-  const initialTotal = Math.min(300, CONFIG.totalFrames);
+  const initialTotal = Math.min(100, CONFIG.totalFrames);
   const maxConcurrent = 6;
-  const cacheLimit = 350;
+  const cacheLimit = CONFIG.totalFrames;
   let started = false;
   let initialDone = 0;
   let initialPhase = true;
@@ -43,7 +43,7 @@ const Loader = (() => {
       console.warn('Loader indisponible :', error);
     }
     // Libérer la page si une requête ou le navigateur reste bloqué.
-    safetyTimer = setTimeout(finish, 60000);
+    safetyTimer = setTimeout(finish, 15000);
     pump();
   }
 
@@ -59,6 +59,10 @@ const Loader = (() => {
       for (const i of distance ? [target + distance, target - distance] : [target]) {
         if (i >= 0 && i < CONFIG.totalFrames && !images.has(i) && !pending.has(i) && !failed.has(i)) return i;
       }
+    }
+    // Remplir progressivement le reste de la séquence en arrière-plan.
+    for (let i = 0; i < CONFIG.totalFrames; i++) {
+      if (!images.has(i) && !pending.has(i) && !failed.has(i)) return i;
     }
     return null;
   }
@@ -85,7 +89,7 @@ const Loader = (() => {
           }
         }
         trimCache();
-        if (!initialPhase && typeof Scroll !== 'undefined') Scroll.requestDraw();
+        if (!initialPhase && Math.abs(index - target) <= 2 && typeof Scroll !== 'undefined') Scroll.requestDraw();
         pump();
       };
       img.src = CONFIG.framePath(index);
