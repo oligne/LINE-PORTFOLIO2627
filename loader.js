@@ -2,9 +2,9 @@ const Loader = (() => {
   const images = new Map();
   const pending = new Set();
   const failed = new Set();
-  const initialTotal = Math.min(100, CONFIG.totalFrames);
+  const initialTotal = Math.min(300, CONFIG.totalFrames);
   const maxConcurrent = 6;
-  const cacheLimit = 150;
+  const cacheLimit = 350;
   let started = false;
   let initialDone = 0;
   let initialPhase = true;
@@ -43,7 +43,7 @@ const Loader = (() => {
       console.warn('Loader indisponible :', error);
     }
     // Libérer la page si une requête ou le navigateur reste bloqué.
-    safetyTimer = setTimeout(finish, 15000);
+    safetyTimer = setTimeout(finish, 60000);
     pump();
   }
 
