@@ -3,9 +3,10 @@
     fr: {
       common: {
         title: {
-          home: 'Portfolio',
-          about: 'À propos | Portfolio',
-          archive: 'Archives | Portfolio'
+          home: 'OLIGNE Lab',
+          about: 'about - OLIGNE Lab',
+          archive: 'archives - OLIGNE Lab',
+          contact: 'contact - OLIGNE Lab'
         },
         nav: {
           work: 'Travaux',
@@ -26,6 +27,13 @@
         }
       },
       pages: {
+        contact: {
+          intro: 'Un projet, une question ou simplement envie d’échanger ?',
+          formLabel: 'Formulaire de contact', name: 'Nom', email: 'Email', message: 'Message',
+          send: 'Envoyer le mail ↗',
+          note: 'Votre application mail s’ouvrira pour vous permettre d’envoyer le message.',
+          progress: 'Progression du formulaire', subject: 'Objet'
+        },
         home: {
           hero: {
             title: 'Je vois les outils numériques comme',
@@ -51,6 +59,22 @@
           },
           media: {
             sketchbookAlt: 'Carnet de croquis'
+          },
+          categories: {
+            screens: {
+              title: 'Physical-digital experience',
+              text: 'Explorer les liens entre espaces physiques et numériques pour imaginer des expériences sensibles, immersives et interactives.',
+              alt: 'Installation mêlant écrans et espace',
+              diplomaCaption: 'Windows — projet de diplôme',
+              diplomaAlt: 'Installation Windows, projet de diplôme',
+              ubiquityCaption: 'Ubiquité',
+              ubiquityAlt: 'Vue du projet Ubiquité'
+            },
+            tangible: {
+              title: 'Tangible Collectible',
+              text: "Un laboratoire d’expérimentation physique autour de l’objet, de la matière et des usages.",
+              alt: 'Recherche autour d’un objet et de sa matérialité'
+            }
           },
           carousels: {
             diploma: {
@@ -148,9 +172,10 @@
     en: {
       common: {
         title: {
-          home: 'Portfolio',
-          about: 'About | Portfolio',
-          archive: 'Archives | Portfolio'
+          home: 'OLIGNE Lab',
+          about: 'about - OLIGNE Lab',
+          archive: 'archives - OLIGNE Lab',
+          contact: 'contact - OLIGNE Lab'
         },
         nav: {
           work: 'Work',
@@ -171,6 +196,13 @@
         }
       },
       pages: {
+        contact: {
+          intro: 'A project, a question, or simply want to get in touch?',
+          formLabel: 'Contact form', name: 'Name', email: 'Email', message: 'Message',
+          send: 'Send message ↗',
+          note: 'Your email application will open so you can send your message.',
+          progress: 'Form completion', subject: 'Subject'
+        },
         home: {
           hero: {
             title: 'I see digital tools as',
@@ -196,6 +228,22 @@
           },
           media: {
             sketchbookAlt: 'Sketchbook'
+          },
+          categories: {
+            screens: {
+              title: 'Physical-digital experience',
+              text: 'Exploring connections between physical and digital spaces to imagine sensitive, immersive and interactive experiences.',
+              alt: 'Installation combining screens and space',
+              diplomaCaption: 'Windows — diploma project',
+              diplomaAlt: 'Windows installation, diploma project',
+              ubiquityCaption: 'Ubiquity',
+              ubiquityAlt: 'View of the Ubiquity project'
+            },
+            tangible: {
+              title: 'Tangible Collectible',
+              text: 'A laboratory for physical experimentation with objects, materials and uses.',
+              alt: 'Exploration of an object and its materiality'
+            }
           },
           carousels: {
             diploma: {
@@ -311,6 +359,16 @@
     homeParagraphOne: 'pages.home.body.paragraphOne',
     homeParagraphTwo: 'pages.home.body.paragraphTwo',
     homeSketchbookAlt: 'pages.home.media.sketchbookAlt',
+    diplomaProjectCaption: 'pages.home.categories.screens.diplomaCaption',
+    diplomaProjectAlt: 'pages.home.categories.screens.diplomaAlt',
+    ubiquityProjectCaption: 'pages.home.categories.screens.ubiquityCaption',
+    ubiquityProjectAlt: 'pages.home.categories.screens.ubiquityAlt',
+    screensCategoryTitle: 'pages.home.categories.screens.title',
+    screensCategoryText: 'pages.home.categories.screens.text',
+    screensCategoryAlt: 'pages.home.categories.screens.alt',
+    tangibleCategoryTitle: 'pages.home.categories.tangible.title',
+    tangibleCategoryText: 'pages.home.categories.tangible.text',
+    tangibleCategoryAlt: 'pages.home.categories.tangible.alt',
     diplomaCarouselTitle: 'pages.home.carousels.diploma.title',
     diplomaCarouselSubtitle: 'pages.home.carousels.diploma.subtitle',
     diplomaCarouselText: 'pages.home.carousels.diploma.text',

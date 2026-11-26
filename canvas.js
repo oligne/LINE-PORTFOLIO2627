@@ -8,10 +8,12 @@ const Canvas = (() => {
 
   function preloadImages() {
     craftingImg = new Image();
-    craftingImg.src = './docs/txt1.png';
+    craftingImg.onload = () => draw(lastFrame, lastScrollProgress);
+    craftingImg.src = './docs/txt1_SVG.svg';
     
     digitalImg = new Image();
-    digitalImg.src = './docs/txt2.png';
+    digitalImg.onload = () => draw(lastFrame, lastScrollProgress);
+    digitalImg.src = './docs/txt2_SVG.svg';
   }
 
   function drawOverlayImages(frame) {
@@ -19,16 +21,18 @@ const Canvas = (() => {
       const opacity = frame < 400 ? (frame - 200) / 200 : Math.max(0, 1 - (frame - 400) / 30); // Fade in progressif puis fade out
       ctx.globalAlpha = opacity;
       
-      // Crafting à gauche - même taille que le canvas
-      if (craftingImg && craftingImg.complete) {
-        ctx.drawImage(craftingImg, 0, 0, canvas.width, canvas.height);
-      }
-      
-      // Through digital à droite - même taille que le canvas
-      if (digitalImg && digitalImg.complete) {
-        ctx.drawImage(digitalImg, 0, 0, canvas.width, canvas.height);
-      }
-      
+      // Les SVG sont placés indépendamment du format de la fenêtre, sans
+      // étirer leur typographie. Les proportions reprennent les visuels d'origine.
+      const drawText = (image, left, width) => {
+        if (!image || !image.complete || !image.naturalWidth) return;
+        const drawWidth = canvas.width * width;
+        const drawHeight = drawWidth * image.naturalHeight / image.naturalWidth;
+        ctx.drawImage(image, canvas.width * left, (canvas.height - drawHeight) / 2, drawWidth, drawHeight);
+      };
+
+      drawText(craftingImg, 273 / 3841, 957 / 3841);
+      drawText(digitalImg, 2669 / 3841, 794 / 3841);
+
       ctx.globalAlpha = 1;
     }
   }

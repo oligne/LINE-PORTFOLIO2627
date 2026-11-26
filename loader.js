@@ -2,7 +2,11 @@ const Loader = (() => {
   const images = new Map();
   const pending = new Set();
   const failed = new Set();
-  const initialTotal = Math.min(100, CONFIG.totalFrames);
+  // Couvrir toute la séquence dès le départ, avec plus de détail au début.
+  const initialFrames = Array.from({ length: CONFIG.totalFrames }, (_, i) => i)
+    .filter(i => i < 30 || i % 5 === 0 || i === CONFIG.totalFrames - 1);
+  const initialSet = new Set(initialFrames);
+  const initialTotal = initialFrames.length;
   const maxConcurrent = 6;
   const cacheLimit = CONFIG.totalFrames;
   let started = false;
@@ -49,7 +53,7 @@ const Loader = (() => {
 
   function nextIndex() {
     if (initialPhase) {
-      for (let i = 0; i < initialTotal; i++) {
+      for (const i of initialFrames) {
         if (!images.has(i) && !pending.has(i) && !failed.has(i)) return i;
       }
       return null;
@@ -80,7 +84,7 @@ const Loader = (() => {
         pending.delete(index);
         if (img.naturalWidth) images.set(index, img);
         else failed.add(index);
-        if (initialPhase && index < initialTotal) {
+        if (initialPhase && initialSet.has(index)) {
           initialDone++;
           indicator?.setProgress(initialDone / initialTotal * 100);
           if (initialDone === initialTotal) {

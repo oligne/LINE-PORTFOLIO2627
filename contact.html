@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>contact - OLIGNE Lab</title>
+  <link rel="icon" type="image/x-icon" href="./docs/favicon.ico?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="contact-page" data-page="contact">
+  <header id="site-header">
+    <nav class="nav-left">
+      <a href="index.html" data-i18n="navWork">Travaux</a>
+      <a href="archive.html" data-i18n="navArchives">Archives</a>
+    </nav>
+    <div class="logo"><img src="./docs/olignename_1LINE.png" alt="Oligne" id="logo-img"></div>
+    <nav class="nav-right">
+      <a href="about.html" data-i18n="navAbout">À propos</a>
+      <a href="contact.html" aria-current="page" data-i18n="navContact">Contact</a>
+      <div class="language-toggle" role="group" aria-label="Sélecteur de langue" data-i18n-aria="languageSwitcherLabel">
+        <button type="button" data-language-option="fr" aria-pressed="true">FR</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" data-language-option="en" aria-pressed="false">ENG</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="contact-layout">
+    <section class="contact-intro">
+      <div id="contact-progress"></div>
+      <div>
+        <h1>Contact</h1>
+        <p data-i18n="pages.contact.intro">Un projet, une question ou simplement envie d’échanger ?</p>
+        <div class="contact-details">
+          <a href="mailto:contact@colinejousset.com">contact@colinejousset.com</a>
+          <a href="https://www.instagram.com/lavieenrouge.png/" target="_blank" rel="noopener noreferrer">@lavieenrouge.png</a>
+          <a href="https://www.linkedin.com/in/coline-jousset/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+    <section class="contact-form-section" aria-label="Formulaire de contact" data-i18n-aria="pages.contact.formLabel">
+      <form id="contact-form">
+        <label for="contact-name" data-i18n="pages.contact.name">Nom</label>
+        <input id="contact-name" name="name" autocomplete="name" required>
+        <label for="contact-email" data-i18n="pages.contact.email">Email</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" required>
+        <label for="contact-subject" data-i18n="pages.contact.subject">Objet</label>
+        <input id="contact-subject" name="subject" required>
+        <label for="contact-message" data-i18n="pages.contact.message">Message</label>
+        <textarea id="contact-message" name="message" rows="5" required></textarea>
+        <button type="submit" data-i18n="pages.contact.send">Envoyer le mail ↗</button>
+        <p class="contact-note" data-i18n="pages.contact.note">Votre application mail s’ouvrira pour vous permettre d’envoyer le message.</p>
+      </form>
+    </section>
+  </main>
+  <script src="language.js"></script>
+  <script src="le-trait-progress.js"></script>
+  <script src="contact.js"></script>
+</body>
+</html>

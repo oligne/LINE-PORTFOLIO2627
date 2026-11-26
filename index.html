@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COLINE JOUSSET</title>
-  <link rel="icon" type="image/x-icon" href="./docs/favicon.ico">
+  <title>OLIGNE Lab</title>
+  <link rel="icon" type="image/x-icon" href="./docs/favicon.ico?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -22,7 +22,7 @@
     </div>
     <nav class="nav-right">
       <a href="about.html" data-i18n="navAbout">À propos</a>
-      <a href="#" data-i18n="navContact">Contact</a>
+      <a href="contact.html" data-i18n="navContact">Contact</a>
       <div class="language-toggle" role="group" aria-label="Language switcher" data-i18n-aria="languageSwitcherLabel">
         <button type="button" data-language-option="fr" aria-pressed="true">FR</button>
         <span aria-hidden="true">/</span>
@@ -65,6 +65,37 @@
     </div>
   </section>
 
+  <section class="category-carousel project-category" aria-labelledby="screens-title">
+    <div class="project-category-viewport">
+      <div class="project-category-track">
+        <div class="category-copy project-category-intro">
+          <h3 id="screens-title" data-i18n="screensCategoryTitle">Physical-digital experience</h3>
+          <p data-i18n="screensCategoryText">Explorer les liens entre espaces physiques et numériques pour imaginer des expériences sensibles, immersives et interactives.</p>
+        </div>
+        <figure class="project-category-item" tabindex="0">
+          <img src="./docs/proj_diplome/JOUSSETColine_photo_03.png" alt="Installation Windows, projet de diplôme" data-i18n-alt="diplomaProjectAlt" loading="lazy">
+          <figcaption data-i18n="diplomaProjectCaption">Windows — projet de diplôme</figcaption>
+        </figure>
+        <figure class="project-category-item project-category-item-portrait" tabindex="0">
+          <img src="./docs/windows/JOUSSETColine_rendu3D_01.png" alt="Vue du projet Ubiquité" data-i18n-alt="ubiquityProjectAlt" loading="lazy">
+          <figcaption data-i18n="ubiquityProjectCaption">Ubiquité</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="category-carousel" aria-labelledby="tangible-title">
+    <div class="category-carousel-inner">
+      <div class="category-image-wrap"><img src="./docs/windows/JOUSSETColine_rendu3D_01.png" alt="Recherche autour d'un objet et de sa matérialité" data-i18n-alt="tangibleCategoryAlt" loading="lazy"></div>
+      <div class="category-copy">
+        <h3 id="tangible-title" data-i18n="tangibleCategoryTitle">Tangible Collectible</h3>
+        <p data-i18n="tangibleCategoryText">Un laboratoire d'expérimentation physique autour de l'objet, de la matière et des usages.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Carrousels de projets conservés pour une utilisation future. -->
+  <div hidden>
   <section id="windows-carousel-section">
     <div class="horizontal-scroll">
       <div class="scroll-content"></div>
@@ -90,6 +121,8 @@
     </div>
   </section>
 
+  </div>
+
   <section id="after-carousel-section"></section>
 
   <script src="config.js"></script>
@@ -97,7 +130,8 @@
   <script src="loader.js"></script>
   <script src="canvas.js"></script>
   <script src="video-screen.js"></script>
-  <script src="carousel-diplome.js"></script>
+  <!-- Ancien script conservé : carousel-diplome.js -->
+  <script src="carousel-categories.js"></script>
   <script src="scroll.js"></script>
   <script src="main.js"></script>
   <script src="language.js"></script>
