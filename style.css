@@ -28,7 +28,7 @@ body {
   position: fixed;
   top: 0; left: 0; right: 0;
   height: 52px;
-  z-index: 100;
+  z-index: 500;
   background: transparent;
   border-bottom: none;
   display: flex;
