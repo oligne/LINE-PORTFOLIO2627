@@ -81,7 +81,11 @@
             tangible: {
               title: 'Tangible Collectible',
               text: "Un laboratoire d’expérimentation physique autour de l’objet, de la matière et des usages.",
-              alt: 'Recherche autour d’un objet et de sa matérialité'
+              alt: 'Recherche autour d’un objet et de sa matérialité',
+              danseuseCaption: 'La Danseuse, avril 2022',
+              keyringCaption: 'Oligne Keyring, février 2025 – mars 2026',
+              squareCaption: 'Square, septembre 2025 – juillet 2026',
+              tissagesCaption: 'Tissages, avril – juin 2023'
             }
           },
           carousels: {
@@ -258,7 +262,11 @@
             tangible: {
               title: 'Tangible Collectible',
               text: 'A laboratory for physical experimentation with objects, materials and uses.',
-              alt: 'Exploration of an object and its materiality'
+              alt: 'Exploration of an object and its materiality',
+              danseuseCaption: 'La Danseuse, April 2022',
+              keyringCaption: 'Oligne Keyring, February 2025 – March 2026',
+              squareCaption: 'Square, September 2025 – July 2026',
+              tissagesCaption: 'Tissages, April – June 2023'
             }
           },
           carousels: {
@@ -390,6 +398,10 @@
     screensCategoryText: 'pages.home.categories.screens.text',
     screensCategoryAlt: 'pages.home.categories.screens.alt',
     tangibleCategoryTitle: 'pages.home.categories.tangible.title',
+    danseuseCaption: 'pages.home.categories.tangible.danseuseCaption',
+    keyringCaption: 'pages.home.categories.tangible.keyringCaption',
+    squareCaption: 'pages.home.categories.tangible.squareCaption',
+    tissagesCaption: 'pages.home.categories.tangible.tissagesCaption',
     tangibleCategoryText: 'pages.home.categories.tangible.text',
     tangibleCategoryAlt: 'pages.home.categories.tangible.alt',
     diplomaCarouselTitle: 'pages.home.carousels.diploma.title',

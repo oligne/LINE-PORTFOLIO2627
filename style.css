@@ -1095,7 +1095,7 @@ body {
 }
 .project-category-item figcaption span { display: block; }
 .caption-title {
-  font: 600 15px/1.35 'Inter', sans-serif;
+  font: 600 13px/1.35 'Inter', sans-serif;
   letter-spacing: 0.01em;
   color: #292929;
   width: fit-content;
@@ -1138,7 +1138,7 @@ body {
   .project-category-intro p { font-size: 13px; }
   .category-empty { min-height: 75vh; }
   .project-category-item img { height: 45vh; }
-  .caption-title { font-size: 13px; }
+  .caption-title { font-size: 12px; }
   .caption-context { font-size: 13px; }
   .caption-credit { font-size: 10px; }
 }
