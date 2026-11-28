@@ -1,0 +1,15 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    ".git/**",
+    ".agents/**",
+    ".codex/**",
+    "**/.DS_Store",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.ts",
+    "node_modules/**",
+    "venv/**",
+    ".venv/**"
+  ]
+}

@@ -3,6 +3,7 @@
   const timelineEl = document.getElementById('archive-timeline');
   const currentYearEl = document.getElementById('archive-current-year');
   const statusEl = document.getElementById('archive-status');
+  const projectPanel = document.getElementById('archive-project');
 
   if (!graphEl || !timelineEl) return;
 
@@ -38,23 +39,70 @@
     years.push(year);
   }
 
+  const archiveLayout = { width: 1200, laneScale: 1, spacing: 34 };
   const allNodes = buildNodes();
+  assignArchivePositions(allNodes.filter((node) => node.type === 'project'));
   const supportNodes = buildSupportNodes();
   const allLinks = buildLinks();
   const layoutBounds = getNodeBounds(allNodes.filter((node) => node.type === 'project'));
-  let visibleStartMonth = source.endYear * 12;
+  let visibleStartMonth = startMonth;
   let graph = null;
   let handleEl = null;
   let isDragging = false;
   let lastNodeCount = 0;
   let lastLinkCount = 0;
+  let selectedProject = null;
+  let hoveredProject = null;
+  const projectKeys = {
+    windows: ['diplomaProjectCaption', 'diplomaProjectContext', null],
+    ubiquity: ['ubiquityProjectCaption', 'ubiquityProjectContext', 'ubiquityProjectCredit'],
+    empreinte: ['empreinteProjectCaption', 'empreinteProjectContext', 'empreinteProjectCredit']
+  };
 
   buildTimeline();
   initGraph();
   setVisibleStart(visibleStartMonth, false);
+  const requestedId = new URLSearchParams(window.location.search).get('project');
+  const requestedProject = allNodes.find((node) => node.type === 'project' && node.id === requestedId);
+  if (requestedProject) openProject(requestedProject);
+  projectPanel.querySelector('.archive-project-close').addEventListener('click', closeProject);
 
   if (window.PortfolioI18n) {
-    window.PortfolioI18n.refreshArchive = refreshArchiveLabels;
+    window.PortfolioI18n.refreshArchive = () => {
+      refreshArchiveLabels();
+      renderProject();
+    };
+  }
+
+  function openProject(node) {
+    selectedProject = node;
+    if (!isProjectVisible(node)) setVisibleStart(projectMonth(node), false);
+    renderProject();
+    const url = new URL(window.location.href);
+    url.searchParams.set('project', node.id);
+    history.replaceState(null, '', url);
+  }
+
+  function renderProject() {
+    if (!selectedProject) return;
+    const keys = projectKeys[selectedProject.id];
+    const translate = (key) => key ? window.PortfolioI18n?.t(key) || '' : '';
+    projectPanel.querySelector('h2').textContent = keys ? translate(keys[0]) : `${selectedProject.title} — ${selectedProject.date}`;
+    const disciplineNames = window.PortfolioI18n?.getLanguage() === 'en'
+      ? { space: 'Space', hybrid: 'Space × digital', digital: 'Digital', object: 'Object & design', image: 'Image & art', material: 'Craft & material' }
+      : { space: 'Espace', hybrid: 'Espace × numérique', digital: 'Numérique', object: 'Objet & design', image: 'Image & création artistique', material: 'Artisanat & matière' };
+    projectPanel.querySelector('.archive-project-discipline').textContent = disciplineNames[selectedProject.discipline] || '';
+    projectPanel.querySelector('.archive-project-context').textContent = keys ? translate(keys[1]) : '';
+    projectPanel.querySelector('.archive-project-credit').textContent = keys ? translate(keys[2]) : '';
+    projectPanel.hidden = false;
+  }
+
+  function closeProject() {
+    selectedProject = null;
+    projectPanel.hidden = true;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('project');
+    history.replaceState(null, '', url);
   }
 
   function buildNodes() {
@@ -77,7 +125,7 @@
         activeStartMonth: month,
         activeEndMonth,
         val: Math.max(1, Math.round((4 + baseScale * 8) * sizeMultiplier)),
-        radius: (3 + baseScale * 3.4) * sizeMultiplier,
+        radius: Math.max(3, (3 + baseScale * 3.4) * sizeMultiplier),
         homeX: x,
         homeY: y,
         targetX: x,
@@ -208,7 +256,14 @@
   }
 
   function shapeProjectLinks(links) {
+    const seen = new Set();
     return links
+      .filter((link) => {
+        const key = `${link.type}:${[link.source, link.target].sort().join('|')}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
       .map((link, index) => {
         if (link.type === 'progression' || link.type === 'exchange') return { ...link, __index: index, curve: 0 };
         return { ...link, __index: index };
@@ -279,14 +334,18 @@
       .cooldownTicks(120)
       .nodeId('id')
       .nodeVal('val')
-      .nodeLabel((node) => `${node.title || node.id}${node.date ? ` - ${node.date}` : ''}`)
+      .nodeLabel(() => '')
       .nodeVisibility((node) => !node.hidden)
+      .onRenderFramePre(drawDisciplineLabels)
+      .onRenderFramePost(drawProjectLabels)
       .nodeCanvasObject(drawNode)
       .nodeCanvasObjectMode(() => 'replace')
       .linkCanvasObject(drawLink)
       .linkCanvasObjectMode(() => 'replace')
       .nodePointerAreaPaint(paintPointerArea)
+      .onNodeClick((node) => { if (node.type === 'project') openProject(node); })
       .onNodeHover((node) => {
+        hoveredProject = node && node.type === 'project' ? node : null;
         graphEl.style.cursor = node && node.type === 'project' ? 'grab' : 'default';
       })
       .onNodeDrag((node) => {
@@ -295,8 +354,6 @@
         node.__dragging = true;
         const dx = typeof node.__lastDragX === 'number' ? node.x - node.__lastDragX : 0;
         const dy = typeof node.__lastDragY === 'number' ? node.y - node.__lastDragY : 0;
-        node.targetX = node.x;
-        node.targetY = node.y;
         if (dx || dy) applyLocalDragInfluence(node, dx, dy);
         node.__lastDragX = node.x;
         node.__lastDragY = node.y;
@@ -306,9 +363,10 @@
         node.__dragging = false;
         delete node.__lastDragX;
         delete node.__lastDragY;
-        node.targetX = node.x;
-        node.targetY = node.y;
+        node.fx = null;
+        node.fy = null;
         graphEl.style.cursor = 'grab';
+        graph.d3ReheatSimulation();
       })
       .graphData({ nodes: [], links: [] });
 
@@ -368,73 +426,55 @@
     updateStatus(projectNodes.length, links.length);
   }
 
-  function recalculateVisibleTargets(projectNodes) {
-    if (!projectNodes.length) return;
-
-    const groups = buildLinkGroups(projectNodes);
-    const sorted = groups.flatMap((group) => group.nodes);
-
-    groups.forEach((group) => {
-      const nodes = group.nodes
-        .slice()
-        .sort((a, b) => visibleProjectMonth(a) - visibleProjectMonth(b) || themeRank(a) - themeRank(b) || a.id.localeCompare(b.id));
-      const minMonth = Math.min(...nodes.map(visibleProjectMonth));
-      const maxMonth = Math.max(...nodes.map(visibleProjectMonth));
-      const monthRange = Math.max(1, maxMonth - minMonth);
-      const monthCounts = new Map();
-      const localSpan = Math.max(24, group.width - 34);
-
-      nodes.forEach((node, index) => {
-        const month = visibleProjectMonth(node);
-        const count = monthCounts.get(month) || 0;
-        monthCounts.set(month, count + 1);
-        const chronological = monthRange <= 2
-          ? index / Math.max(1, nodes.length - 1)
-          : (month - minMonth) / monthRange;
-        const sameMonthOffset = (count - 0.5) * 10;
-        const themeOffset = (categoryLane(node) - group.averageLane) * 0.28;
-        const toolOffset = softwareLaneOffset(node) * 0.05;
-        const localWave = nodes.length <= 2
-          ? (index - (nodes.length - 1) / 2) * 18
-          : Math.sin(index * 1.72 + group.index * 0.7) * (12 + Math.min(nodes.length, 5));
-        const islandArc = Math.cos((chronological - 0.5) * Math.PI * 2) * Math.min(16, nodes.length * 2.2);
-
-        node.__linkGroup = group.id;
-        node.__visibleBaseX = group.centerX + (chronological - 0.5) * localSpan + sameMonthOffset;
-        node.__visibleBaseY = group.centerY + themeOffset + toolOffset + localWave + islandArc;
-        node.targetX = node.__visibleBaseX;
-        node.targetY = node.__visibleBaseY;
-      });
+  // Coordinates are shared by every filter state. X is the start date; Y is
+  // the disciplinary lane. Change these values to art-direct the whole map.
+  function assignArchivePositions(projects) {
+    const ordered = projects.slice().sort((a, b) => a.month - b.month || a.id.localeCompare(b.id));
+    ordered.forEach((node) => {
+      const ratio = (node.month - startMonth) / Math.max(1, endMonth - startMonth);
+      node.homeX = (ratio - 0.5) * archiveLayout.width;
+      // A small, stable variation gives each project room around its area.
+      const variation = (stableHash(node.id) % 25) - 12;
+      node.homeY = categoryLane(node) * archiveLayout.laneScale + variation + (node.layoutOffsetY || 0);
+      node.targetX = node.homeX;
+      node.targetY = node.homeY;
     });
-
-    for (let pass = 0; pass < 44; pass += 1) {
-      for (let i = 0; i < sorted.length; i += 1) {
-        for (let j = i + 1; j < sorted.length; j += 1) {
-          separateVisibleTargets(sorted[i], sorted[j]);
-          const affinity = categoryAffinity(sorted[i], sorted[j]);
-          if (affinity && sameLinkGroup(sorted[i], sorted[j])) {
-            attractVisibleTargets(sorted[i], sorted[j], 78 - affinity * 6, 0.0015 + affinity * 0.0008);
-          }
+    // Separate nearby points vertically so collision handling never changes time.
+    for (let pass = 0; pass < 80; pass += 1) {
+      for (let i = 0; i < ordered.length; i += 1) {
+        for (let j = i + 1; j < ordered.length; j += 1) {
+          const a = ordered[i];
+          const b = ordered[j];
+          const dx = b.homeX - a.homeX;
+          const gap = archiveLayout.spacing + a.radius + b.radius;
+          if (dx >= gap) break;
+          const dy = b.homeY - a.homeY;
+          const neededY = Math.sqrt(gap * gap - dx * dx);
+          if (Math.abs(dy) >= neededY) continue;
+          const push = (neededY - Math.abs(dy)) * 0.5;
+          const direction = dy < 0 ? -1 : 1;
+          a.homeY -= direction * push;
+          b.homeY += direction * push;
         }
       }
-
-      allLinks.forEach((link) => {
-        const sourceNode = sorted.find((node) => node.id === getLinkEndpointId(link.source));
-        const targetNode = sorted.find((node) => node.id === getLinkEndpointId(link.target));
-        if (!sourceNode || !targetNode) return;
-        if (link.type === 'software') {
-          if (sameLinkGroup(sourceNode, targetNode)) attractVisibleTargets(sourceNode, targetNode, 112, 0.0008 * (link.strength || 0.42));
-        } else if (link.type === 'progression' || link.type === 'exchange') {
-          const sameGroup = sameLinkGroup(sourceNode, targetNode);
-          attractVisibleTargets(sourceNode, targetNode, sameGroup ? 58 : 112, sameGroup ? 0.007 : 0.0016);
-        }
-      });
-
-      sorted.forEach((node) => {
-        node.targetX += (node.__visibleBaseX - node.targetX) * 0.04;
-        node.targetY += (node.__visibleBaseY - node.targetY) * 0.05;
-      });
     }
+    ordered.forEach((node) => {
+      node.targetX = node.x = node.homeX;
+      node.targetY = node.y = node.homeY;
+    });
+  }
+
+  function stableHash(value) {
+    let hash = 2166136261;
+    for (const character of value) hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
+    return hash >>> 0;
+  }
+
+  function recalculateVisibleTargets(projectNodes) {
+    projectNodes.forEach((node) => {
+      node.targetX = node.homeX;
+      node.targetY = node.homeY;
+    });
   }
 
   function separateVisibleTargets(first, second) {
@@ -576,20 +616,7 @@
   }
 
   function shouldDisplayVisibleLink(link, sourceNode, targetNode) {
-    if (!sourceNode || !targetNode) return false;
-    if (link.type === 'progression' || link.type === 'exchange') return true;
-    if (link.type !== 'software') return true;
-
-    const targetDistance = Math.hypot(sourceNode.targetX - targetNode.targetX, sourceNode.targetY - targetNode.targetY);
-    const sameTheme = primaryTheme(sourceNode) === primaryTheme(targetNode);
-    const relatedTheme = categoryAffinity(sourceNode, targetNode) > 0;
-    const distanceLimit = sameLinkGroup(sourceNode, targetNode)
-      ? 132
-      : sameTheme || relatedTheme
-        ? 118
-        : 86;
-
-    return targetDistance < distanceLimit;
+    return Boolean(sourceNode && targetNode && link.type !== 'software');
   }
 
   function attractVisibleTargets(first, second, desired, strength) {
@@ -608,19 +635,21 @@
   }
 
   function categoryLane(node) {
-    const categories = nodeCategoryKeys(node);
-    const has = (key) => categories.includes(key);
+    // Separate paths give a project a narrative position beyond its medium.
+    const paths = { narrative: -155, interior: -75, 'public-space': -10, 'real-virtual': 15, material: 115 };
+    if (Object.prototype.hasOwnProperty.call(paths, node.researchPath)) return paths[node.researchPath];
+    // The three main areas describe the spatial → hybrid → digital axis.
+    // Material, object and image remain intermediate, not separate branches.
+    const lanes = { space: -125, material: -75, object: -45, hybrid: 0, image: 45, digital: 125 };
+    if (Object.prototype.hasOwnProperty.call(lanes, node.discipline)) return lanes[node.discipline];
 
-    if (has('espace') && has('num')) return 4;
-    if (has('espace')) return -54;
-    if (has('num') && (has('programmation') || has('web'))) return -84;
-    if (has('num') && (has('interactif') || has('scale') || has('live'))) return -42;
-    if (has('craft')) return 72;
-    if (has('photo') || has('artwork') || has('object')) return 46;
-    if (has('num')) return -58;
-    if (node.pole === 'digital-pure') return -72;
-    if (node.pole === 'digital-space') return 18;
-    return 0;
+    // Fallback for projects added to the spreadsheet before being classified.
+    const categories = nodeCategoryKeys(node);
+    const has = (key) => categories.some((category) => category.split('-').includes(key));
+    if (has('espace') && has('num')) return lanes.hybrid;
+    if (has('espace')) return lanes.space;
+    if (has('num')) return lanes.digital;
+    return lanes.material;
   }
 
   function primaryTheme(node) {
@@ -695,8 +724,7 @@
   function fitGraph(ms) {
     window.requestAnimationFrame(() => {
       if (!graph) return;
-      const visibleProjects = graph.graphData().nodes.filter((node) => node.type === 'project');
-      const bounds = visibleProjects.length ? getNodeBounds(visibleProjects) : layoutBounds;
+      const bounds = { minX: -archiveLayout.width / 2 - 25, maxX: archiveLayout.width / 2 + 25, minY: Math.min(layoutBounds.minY, -155) - 25, maxY: Math.max(layoutBounds.maxY, 125) + 35 };
       const centerX = (bounds.minX + bounds.maxX) / 2;
       const centerY = (bounds.minY + bounds.maxY) / 2;
       graph.centerAt(centerX, centerY, ms);
@@ -705,7 +733,7 @@
   }
 
   function graphPadding() {
-    return Math.max(150, Math.min(graphEl.clientWidth, graphEl.clientHeight) * 0.24);
+    return Math.max(24, Math.min(graphEl.clientWidth, graphEl.clientHeight) * 0.06);
   }
 
   function zoomForBounds(bounds) {
@@ -714,7 +742,80 @@
     const height = Math.max(1, bounds.maxY - bounds.minY + 32);
     const availableWidth = Math.max(1, graphEl.clientWidth - padding * 2);
     const availableHeight = Math.max(1, graphEl.clientHeight - padding * 2);
-    return clamp(Math.min(availableWidth / width, availableHeight / height), 0.75, 2.2);
+    return clamp(Math.min(availableWidth / width, availableHeight / height), 0.1, 2.2);
+  }
+
+  function drawDisciplineLabels(ctx, globalScale) {
+    const top = Math.min(layoutBounds.minY, -155);
+    const bottom = Math.max(layoutBounds.maxY, 125);
+    ctx.save();
+    ctx.lineWidth = 0.65 / globalScale;
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.09)';
+    ctx.font = `${9 / globalScale}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#999';
+    // A quiet horizontal reference makes the two sides of the practice legible.
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.14)';
+    ctx.beginPath();
+    ctx.moveTo(-archiveLayout.width / 2, 0);
+    ctx.lineTo(archiveLayout.width / 2, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawProjectLabels(ctx, globalScale) {
+    if (!graph) return;
+    const projects = graph.graphData().nodes.filter((node) => node.type === 'project' && !node.__exiting);
+    const scale = globalScale;
+    const topLeft = graph.screen2GraphCoords(5, 5);
+    const bottomRight = graph.screen2GraphCoords(graphEl.clientWidth - 5, graphEl.clientHeight - 5);
+    const occupied = projects.map((node) => {
+      const radius = Math.max(7, node.radius * Math.sqrt(scale) + 4) / scale;
+      return { x: node.x - radius, y: node.y - radius, width: radius * 2, height: radius * 2 };
+    });
+    const intersects = (a, b) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+    ctx.save();
+    ctx.textBaseline = 'middle';
+    projects.sort((a, b) => Number(b === hoveredProject) - Number(a === hoveredProject) || b.radius - a.radius || a.id.localeCompare(b.id));
+    projects.forEach((node) => {
+      const active = node === hoveredProject;
+      // Reserve the bold width even at rest so hover does not move labels.
+      ctx.font = `600 ${12 / scale}px Inter, sans-serif`;
+      const width = ctx.measureText(node.title).width;
+      const height = 18 / scale;
+      let placed = null;
+      for (let distance = 10; distance <= Math.max(graphEl.clientWidth, graphEl.clientHeight) && !placed; distance += 10) {
+        const d = distance / scale;
+        const offsets = [
+          [d, -height / 2], [-d - width, -height / 2],
+          [-width / 2, -d - height], [-width / 2, d],
+          [d, -d - height], [-d - width, -d - height],
+          [d, d], [-d - width, d]
+        ];
+        for (const [x, y] of offsets) {
+          const box = { x: node.x + x, y: node.y + y, width, height };
+          if (box.x < topLeft.x || box.y < topLeft.y || box.x + width > bottomRight.x || box.y + height > bottomRight.y) continue;
+          if (occupied.some((other) => intersects(box, other))) continue;
+          placed = box;
+          break;
+        }
+      }
+      if (!placed) return;
+      occupied.push(placed);
+      // Long displacements get a fine leader so the label stays unambiguous.
+      const cx = Math.max(placed.x, Math.min(node.x, placed.x + placed.width));
+      const cy = Math.max(placed.y, Math.min(node.y, placed.y + placed.height));
+      if (Math.hypot(cx - node.x, cy - node.y) * scale > 24) {
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+        ctx.lineWidth = 0.5 / scale;
+        ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(cx, cy); ctx.stroke();
+      }
+      ctx.font = `${active ? '600' : '300'} ${12 / scale}px Inter, sans-serif`;
+      ctx.fillStyle = active ? '#111' : '#595959';
+      ctx.fillText(node.title, placed.x, placed.y + height / 2);
+    });
+    ctx.restore();
   }
 
   function drawNode(node, ctx, globalScale) {
@@ -751,7 +852,8 @@
       ctx.lineTo(targetNode.x, targetNode.y);
       ctx.setLineDash([2.5 / globalScale, 5.5 / globalScale]);
     } else {
-      ctx.lineTo(targetNode.x, targetNode.y);
+      const middleX = (sourceNode.x + targetNode.x) / 2;
+      ctx.bezierCurveTo(middleX, sourceNode.y, middleX, targetNode.y, targetNode.x, targetNode.y);
       if (isExchange) ctx.setLineDash([4 / globalScale, 6 / globalScale]);
     }
     const softwareWeight = isSoftware ? clamp(0.82 + (link.strength || 0.42), 0.86, 1.28) : 1;
@@ -909,8 +1011,6 @@
       node.y += moveY;
       node.vx = (node.vx || 0) + moveX * 0.08;
       node.vy = (node.vy || 0) + moveY * 0.08;
-      node.targetX += moveX * 0.46;
-      node.targetY += moveY * 0.46;
     });
 
     graph.d3ReheatSimulation();
@@ -1033,31 +1133,6 @@
 
   function layoutForce(alpha) {
     const nodes = graph ? graph.graphData().nodes : [];
-    const projectNodes = nodes.filter((node) => node.type === 'project' && !node.hidden);
-
-    for (let i = 0; i < projectNodes.length; i += 1) {
-      for (let j = i + 1; j < projectNodes.length; j += 1) {
-        applyRuntimeRepulsion(projectNodes[i], projectNodes[j], alpha);
-        const affinity = categoryAffinity(projectNodes[i], projectNodes[j]);
-        if (affinity && sameLinkGroup(projectNodes[i], projectNodes[j])) {
-          applyRuntimeAttraction(projectNodes[i], projectNodes[j], 84 - affinity * 4, alpha, 0.0015 + affinity * 0.0006);
-        }
-      }
-    }
-
-    const nodeMap = new Map(projectNodes.map((node) => [node.id, node]));
-    (graph ? graph.graphData().links : []).forEach((link) => {
-      const source = nodeMap.get(getLinkEndpointId(link.source));
-      const target = nodeMap.get(getLinkEndpointId(link.target));
-      if (!source || !target) return;
-      if (link.type === 'software') {
-        if (sameLinkGroup(source, target)) applyRuntimeAttraction(source, target, 120, alpha, 0.002 * (link.strength || 0.42));
-      } else if (link.type === 'progression' || link.type === 'exchange') {
-        const sameGroup = sameLinkGroup(source, target);
-        applyRuntimeAttraction(source, target, sameGroup ? 66 : 112, alpha, sameGroup ? 0.012 : 0.003);
-      }
-    });
-
     nodes.forEach((node) => {
       if (node.hidden || node.__dragging) return;
       const pull = node.type === 'project' ? 0.18 : 0.22;

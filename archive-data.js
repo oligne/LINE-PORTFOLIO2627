@@ -1,6 +1,34 @@
 (function () {
   const DATA_URL = './docs/archive_project_database_template.xlsx';
 
+  // Editorial classification: the primary discipline is independent of tools
+  // and materials, which can span several practices.
+  const DISCIPLINES = {
+    'la-chambre': 'hybrid', ubiquity: 'hybrid', windows: 'hybrid',
+    empreinte: 'digital', recit: 'digital', 'fenetre-sur-chambre': 'digital',
+    'flux-x-line': 'hybrid', toron: 'space', figure: 'space',
+    'oligne-keyring': 'object', pulsar: 'digital', square: 'object',
+    'stickers-oligne': 'image', 'brutalism-vjset': 'image',
+    matheriautheque: 'space', 'petite-ceinture': 'space', 'sortir-du-cadre': 'space',
+    basis: 'space', 'mister-garden': 'space', 'villa-seurat': 'space',
+    'papier-ciseaux': 'material', 'photoreportage-jmw-studio': 'image',
+    'la-danseuse': 'material', 'chantier-participatif': 'material',
+    sauvegarde: 'material', tissages: 'material'
+  };
+
+  // Research paths from the author's diagram. These guide placement separately
+  // from each project's main discipline; they do not imply new project links.
+  const RESEARCH_PATHS = {
+    pulsar: 'narrative', recit: 'narrative',
+    basis: 'interior', 'mister-garden': 'interior', matheriautheque: 'interior',
+    'petite-ceinture': 'public-space', 'sortir-du-cadre': 'public-space',
+    empreinte: 'real-virtual', windows: 'real-virtual', ubiquity: 'real-virtual',
+    'la-chambre': 'real-virtual', 'fenetre-sur-chambre': 'real-virtual',
+    'chantier-participatif': 'material', 'la-danseuse': 'material',
+    tissages: 'material', sauvegarde: 'material', square: 'material',
+    'oligne-keyring': 'material', 'papier-ciseaux': 'material'
+  };
+
   window.loadArchiveGraphSource = async function loadArchiveGraphSource() {
     if (!window.XLSX) {
       throw new Error('SheetJS is required to read archive_project_database_template.xlsx');
@@ -66,6 +94,8 @@
           date: formatDateRange(startDate, endDate) || String(year),
           type: 'project',
           category,
+          discipline: DISCIPLINES[id] || '',
+          researchPath: RESEARCH_PATHS[id] || '',
           pole: normalizePole(category),
           scale: clamp(numberValue(row.taille) || numberValue(row.echelle_visuelle_0_1) || 0.62, 0.25, 1.15),
           size,
@@ -76,6 +106,8 @@
           mediums: [],
           context: '',
           layout,
+          // Optional spreadsheet override: vertical offset within the discipline.
+          layoutOffsetY: numberValue(row.layout_offset_y),
           follows: splitLinks(row.liens || row.liens_progression_ids)
         };
       });

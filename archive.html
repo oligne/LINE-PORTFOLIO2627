@@ -7,7 +7,7 @@
   <link rel="icon" type="image/x-icon" href="./docs/favicon.ico?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261126">
+  <link rel="stylesheet" href="style.css?v=20261126-3">
 </head>
 <body class="archive-page" data-page="archive">
   <header id="site-header">
@@ -32,19 +32,28 @@
   <main class="archive-stage" aria-label="Archives chronologiques" data-i18n-aria="archiveStageLabel">
     <section class="archive-graph-shell">
       <div id="archive-graph" aria-label="Constellation de projets" data-i18n-aria="archiveGraphLabel"></div>
+      <p class="archive-map-key" data-i18n="archiveMapKey">Temps →  /  Pistes de recherche</p>
       <div class="archive-readout" aria-hidden="true">
         <span id="archive-current-year">2024</span>
         <span id="archive-status">0 projects / 0 links</span>
       </div>
     </section>
 
+    <aside class="archive-project" id="archive-project" aria-labelledby="archive-project-title" hidden>
+      <button type="button" class="archive-project-close" aria-label="Fermer / Close">×</button>
+      <h2 id="archive-project-title"></h2>
+      <p class="archive-project-discipline"></p>
+      <p class="archive-project-context"></p>
+      <p class="archive-project-credit"></p>
+    </aside>
+
     <nav id="archive-timeline" class="archive-timeline" aria-label="Frise chronologique des archives" data-i18n-aria="archiveTimelineLabel"></nav>
   </main>
 
   <script src="https://unpkg.com/force-graph"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="archive-data.js"></script>
-  <script src="language.js"></script>
-  <script src="archive-graph.js"></script>
+  <script src="archive-data.js?v=20261126-3"></script>
+  <script src="language.js?v=20261126-3"></script>
+  <script src="archive-graph.js?v=20261126-9"></script>
 </body>
 </html>

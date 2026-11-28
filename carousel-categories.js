@@ -2,10 +2,12 @@
   const sections = document.querySelectorAll('.category-carousel');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let ticking = false;
+  let pointerX = null;
 
   function update() {
     sections.forEach((section) => {
       const rect = section.getBoundingClientRect();
+      if (section.classList.contains('category-empty')) return;
       if (section.classList.contains('project-category')) {
         const viewport = section.querySelector('.project-category-viewport');
         const track = section.querySelector('.project-category-track');
@@ -20,7 +22,21 @@
         section.style.setProperty('--category-shift', `${reducedMotion.matches ? 0 : -20 * progress}px`);
       }
     });
+    updateCaptionHover();
     ticking = false;
+  }
+
+  function updateCaptionHover() {
+    document.querySelectorAll('.project-category:not(.category-empty)').forEach((section) => {
+      const viewport = section.querySelector('.project-category-viewport');
+      const viewportRect = viewport.getBoundingClientRect();
+      const visible = viewportRect.bottom > 0 && viewportRect.top < window.innerHeight;
+      section.querySelectorAll('.project-category-item').forEach((item) => {
+        const imageRect = item.querySelector('img').getBoundingClientRect();
+        item.classList.toggle('is-pointer-active', visible && pointerX !== null &&
+          pointerX >= imageRect.left && pointerX < imageRect.right);
+      });
+    });
   }
 
   function requestUpdate() {
@@ -30,6 +46,15 @@
     }
   }
 
+  window.addEventListener('pointermove', (event) => {
+    if (event.pointerType === 'touch') return;
+    pointerX = event.clientX;
+    requestUpdate();
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => {
+    pointerX = null;
+    requestUpdate();
+  });
   window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', requestUpdate);
   window.addEventListener('load', requestUpdate);

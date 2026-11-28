@@ -751,6 +751,17 @@ body {
   color: #aaa;
 }
 
+.archive-map-key {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+  color: #999;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
 .archive-readout {
   position: absolute;
   left: 50%;
@@ -779,41 +790,57 @@ body {
 
 .archive-ticks {
   display: grid;
-  grid-template-columns: repeat(84, minmax(4px, 1fr));
+  grid-template-columns: repeat(84, minmax(0, 1fr));
+  position: relative;
   align-items: center;
-  gap: 6px;
+  height: 16px;
+}
+
+.archive-ticks::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid #dedede;
+  pointer-events: none;
 }
 
 .archive-tick {
-  width: 5px;
-  height: 5px;
+  position: relative;
+  width: 100%;
+  height: 16px;
+  padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: #e8e8e8;
+  background: transparent;
   cursor: pointer;
-  transition: background 160ms ease, transform 160ms ease;
 }
 
-.archive-tick:hover,
-.archive-tick.is-start {
-  transform: scale(1.45);
+.archive-tick::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 1px;
+  height: 4px;
+  background: #d4d4d4;
 }
 
-.archive-tick.is-visible {
-  background: #111;
-}
+.archive-tick.is-visible::after { background: #777; }
+.archive-tick:hover::after, .archive-tick.is-start::after { height: 8px; top: 4px; background: #111; }
 
 .archive-range-handle {
   position: absolute;
-  top: 12px;
-  width: 11px;
-  height: 11px;
+  top: 22px;
+  width: 9px;
+  height: 9px;
+  padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #000;
+  background: #111;
   color: transparent;
   cursor: ew-resize;
-  transform: translate(-50%, -3px);
+  transform: translate(-50%, -50%);
   z-index: 2;
   transition: box-shadow 160ms ease;
 }
@@ -827,7 +854,7 @@ body {
 .archive-year-labels {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-top: 17px;
+  margin-top: 10px;
   transform: translateX(-3px);
 }
 
@@ -862,7 +889,7 @@ body {
   }
 
   .archive-ticks {
-    gap: 4px;
+    gap: 0;
   }
 
   .archive-readout {
@@ -1031,19 +1058,22 @@ body {
 .project-category-track {
   display: flex;
   align-items: flex-start;
-  gap: 5vw;
+  gap: 14px;
   width: max-content;
-  padding: 0 20px;
+  padding: 0 clamp(32px, 6vw, 96px);
   transform: translate3d(var(--project-shift, 0px), 0, 0);
   will-change: transform;
 }
 .project-category-intro {
-  flex: 0 0 min(34vw, 430px);
+  flex: 0 0 min(27vw, 320px);
+  margin-right: clamp(24px, 4vw, 64px);
   align-self: center;
   opacity: var(--intro-opacity, 1);
 }
 .project-category-item {
   flex: none;
+  display: grid;
+  grid-template-columns: max-content;
   margin: 0;
   outline-offset: 4px;
 }
@@ -1054,22 +1084,81 @@ body {
   max-width: none;
 }
 .project-category-item figcaption {
-  margin-top: 0.7rem;
-  font: 400 14px/1.4 Helvetica, Arial, sans-serif;
-  color: #333;
+  width: 0;
+  min-width: 100%;
+  margin-top: 0.85rem;
+  color: #494949;
   text-align: left;
+  overflow-wrap: anywhere;
   opacity: 0;
   transition: opacity 200ms ease;
 }
-.project-category-item:hover figcaption,
-.project-category-item:focus-visible figcaption { opacity: 1; }
+.project-category-item figcaption span { display: block; }
+.caption-title {
+  font: 600 15px/1.35 'Inter', sans-serif;
+  letter-spacing: 0.01em;
+  color: #292929;
+  width: fit-content;
+  max-width: 100%;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 0 1px;
+  transition: background-size 300ms ease;
+}
+.caption-context {
+  margin-top: 0.3rem;
+  font: italic 300 14px/1.5 'Inter', sans-serif;
+}
+.caption-credit {
+  margin-top: 0.4rem;
+  font: 400 11px/1.4 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+  color: #888;
+}
+.project-category-item.is-pointer-active figcaption,
+.project-category-item:focus-within figcaption { opacity: 1; }
+.project-category-item figcaption a { color: inherit; text-decoration: none; }
+.project-category-item figcaption a:hover .caption-title,
+.project-category-item figcaption a:focus-visible .caption-title { background-size: 100% 1px; }
+@media (prefers-reduced-motion: reduce) {
+  .caption-title { transition: none; }
+}
+.project-category-item figcaption a:focus-visible { outline: 1px solid #333; outline-offset: 3px; }
+.project-category-intro p { font-size: 16px; }
+.category-empty { min-height: 75vh; }
+.category-empty .project-category-intro { opacity: 1; }
 @media (hover: none) {
   .project-category-item figcaption { opacity: 1; }
 }
 @media (max-width: 700px) {
   .project-category { min-height: 220vh; }
-  .project-category-track { gap: 6vw; padding: 0 14px; }
-  .project-category-intro { flex-basis: 65vw; }
+  .project-category-track { gap: 10px; padding: 0 28px; }
+  .project-category-intro { flex-basis: min(55vw, 280px); margin-right: 20px; }
+  .project-category-intro p { font-size: 13px; }
+  .category-empty { min-height: 75vh; }
   .project-category-item img { height: 45vh; }
-  .project-category-item figcaption { font-size: 12px; }
+  .caption-title { font-size: 13px; }
+  .caption-context { font-size: 13px; }
+  .caption-credit { font-size: 10px; }
 }
+
+.project-image-link { display: block; }
+.project-image-link:focus-visible { outline: 1px solid #333; outline-offset: 4px; }
+.archive-project {
+  position: absolute;
+  z-index: 3;
+  top: 100px;
+  right: clamp(24px, 4vw, 64px);
+  width: min(320px, calc(100% - 48px));
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #333;
+}
+.archive-project[hidden] { display: none; }
+.archive-project h2 { padding-right: 24px; font: 600 15px/1.4 'Inter', sans-serif; }
+.archive-project-discipline { margin-top: 0.5rem; color: #888; font: 400 10px/1.4 'Inter', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+.archive-project-context { margin-top: 0.6rem; font: italic 300 14px/1.5 'Inter', sans-serif; }
+.archive-project-credit { margin-top: 0.6rem; color: #888; font: 400 11px/1.4 'Inter', sans-serif; }
+.archive-project-close { position: absolute; top: 15px; right: 18px; border: 0; background: none; color: #666; font: 300 24px/1 'Inter', sans-serif; cursor: pointer; }
+.archive-project-close:focus-visible { outline: 1px solid #333; outline-offset: 3px; }

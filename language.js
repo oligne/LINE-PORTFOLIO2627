@@ -23,6 +23,7 @@
           graphUnavailable: 'Graphe des archives indisponible',
           dataUnavailable: 'Données des archives indisponibles',
           rangeHandleLabel: 'Début de la plage d’archives visible',
+          mapKey: 'Temps →  /  Pistes de recherche',
           status: '{period} - {year} / {nodeCount} points / {linkCount} liens'
         }
       },
@@ -65,9 +66,16 @@
               title: 'Physical-digital experience',
               text: 'Explorer les liens entre espaces physiques et numériques pour imaginer des expériences sensibles, immersives et interactives.',
               alt: 'Installation mêlant écrans et espace',
-              diplomaCaption: 'Windows — projet de diplôme',
+              diplomaCaption: 'Windows, juin 2026',
+              diplomaContext: 'Projet de diplôme Master Numérique, Ensaama Olivier de Serres',
               diplomaAlt: 'Installation Windows, projet de diplôme',
-              ubiquityCaption: 'Ubiquité',
+              ubiquityCaption: 'Ubiquité, septembre 2026',
+              ubiquityContext: 'Exposition collective Vivement Demain #5, Paris Design Week, curatée par le Campus MOMADe, Mobilier national, Galerie des Gobelins',
+              ubiquityCredit: 'Photo : Baptiste Gault',
+              empreinteCaption: 'Empreinte, octobre 2025',
+              empreinteContext: 'Exposition collective Artiste n., curatée par Et1celle, Gaîté Lyrique',
+              empreinteCredit: 'Photo : TV Jussieu',
+              empreinteAlt: 'Projet Empreinte',
               ubiquityAlt: 'Vue du projet Ubiquité'
             },
             tangible: {
@@ -192,6 +200,7 @@
           graphUnavailable: 'Archive graph unavailable',
           dataUnavailable: 'Archive data unavailable',
           rangeHandleLabel: 'Start of visible archive range',
+          mapKey: 'Time →  /  Lines of inquiry',
           status: '{period} - {year} / {nodeCount} points / {linkCount} links'
         }
       },
@@ -234,9 +243,16 @@
               title: 'Physical-digital experience',
               text: 'Exploring connections between physical and digital spaces to imagine sensitive, immersive and interactive experiences.',
               alt: 'Installation combining screens and space',
-              diplomaCaption: 'Windows — diploma project',
+              diplomaCaption: 'Windows, June 2026',
+              diplomaContext: 'Digital Design master’s graduation project, Ensaama Olivier de Serres',
               diplomaAlt: 'Windows installation, diploma project',
-              ubiquityCaption: 'Ubiquity',
+              ubiquityCaption: 'Ubiquity, September 2026',
+              ubiquityContext: 'Vivement Demain #5 group exhibition, Paris Design Week, curated by Campus MOMADe, Mobilier national, Galerie des Gobelins',
+              ubiquityCredit: 'Photo: Baptiste Gault',
+              empreinteCaption: 'Empreinte, October 2025',
+              empreinteContext: 'Artiste n. group exhibition, curated by Et1celle, Gaîté Lyrique',
+              empreinteCredit: 'Photo: TV Jussieu',
+              empreinteAlt: 'Empreinte project',
               ubiquityAlt: 'View of the Ubiquity project'
             },
             tangible: {
@@ -359,6 +375,13 @@
     homeParagraphOne: 'pages.home.body.paragraphOne',
     homeParagraphTwo: 'pages.home.body.paragraphTwo',
     homeSketchbookAlt: 'pages.home.media.sketchbookAlt',
+    diplomaProjectContext: 'pages.home.categories.screens.diplomaContext',
+    ubiquityProjectContext: 'pages.home.categories.screens.ubiquityContext',
+    ubiquityProjectCredit: 'pages.home.categories.screens.ubiquityCredit',
+    empreinteProjectContext: 'pages.home.categories.screens.empreinteContext',
+    empreinteProjectCaption: 'pages.home.categories.screens.empreinteCaption',
+    empreinteProjectCredit: 'pages.home.categories.screens.empreinteCredit',
+    empreinteProjectAlt: 'pages.home.categories.screens.empreinteAlt',
     diplomaProjectCaption: 'pages.home.categories.screens.diplomaCaption',
     diplomaProjectAlt: 'pages.home.categories.screens.diplomaAlt',
     ubiquityProjectCaption: 'pages.home.categories.screens.ubiquityCaption',
@@ -420,6 +443,7 @@
     archiveGraphUnavailable: 'common.archive.graphUnavailable',
     archiveDataUnavailable: 'common.archive.dataUnavailable',
     archiveRangeHandleLabel: 'common.archive.rangeHandleLabel',
+    archiveMapKey: 'common.archive.mapKey',
     archiveStatus: 'common.archive.status'
   };
 
